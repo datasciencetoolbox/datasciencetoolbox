@@ -1,0 +1,31 @@
+---
+- hosts: 127.0.0.1
+  sudo: yes
+  connection: local
+  tasks:
+    - name: Get Command Line Tools
+      git: repo=https://github.com/jeroenjanssens/command-line-tools-for-data-science.git dest=home/vagrant/repo/
+    #- apt_repository: repo='ppa:chris-lea/node.js'
+    #- get_url: url=http://stedolan.github.io/jq/download/linux64/jq dest=/home/vagrant/jq mode=0755
+    #- name: Install packages
+      #apt: pkg={{item}} state=latest
+      #with_items:
+        #- parallel
+        #- libxml2-dev
+        #- libxslt1-dev
+    #- name: Install Python packages
+      #pip: name={{item}} state=latest
+      #with_items:
+        #- awscli
+        #- csvkit
+        #- cssselect
+        #- lxml
+    #- name: Add path
+      #lineinfile: >
+      #dest=/home/vagrant/.bashrc
+      #state=present
+      #backrefs=yes
+      #regexp='PATH=(["]*)((?!.*?{{item}}).*?)(["]*)$'
+      #line="PATH=\1\2:{{item}}\3"
+      #with_items:
+        #- asdf

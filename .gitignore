@@ -7,7 +7,6 @@
 *.egg
 *.egg-info
 dist
-build
 eggs
 parts
 bin
@@ -34,3 +33,9 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+variables.json
+packer_cache
+*.iso
+*.box
+output-virtualbox-iso

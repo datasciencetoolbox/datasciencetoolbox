@@ -1,0 +1,11 @@
+# recommender.yml
+---
+- hosts: 127.0.0.1
+  sudo: yes
+  connection: local
+  tasks:
+    - name: Install htop
+      apt: pkg=htop state=latest
+    #- name: Get repo
+    #- git: repo=git://foosball.example.org/path/to/repo.git
+           #dest=/srv/checkout

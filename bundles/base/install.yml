@@ -1,0 +1,39 @@
+# Data Science Toolbox base install
+---
+- hosts: 127.0.0.1
+  sudo: yes
+  connection: local
+  tasks:
+    - name: Install packages
+      apt: pkg={{item}} state=latest
+      with_items:
+        - git
+        - mysql-common
+        - libmysqlclient-dev 
+        - python-pycurl
+        - python-dev
+        - python-numpy
+        - python-scipy
+        - python-matplotlib
+        - python-pandas
+        - python-nose
+        - python-sympy
+        - python-scikits-learn
+    - shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+    - apt_repository: repo='deb http://cran.rstudio.com/bin/linux/ubuntu saucy/' state=present
+    - apt: pkg=r-base-dev state=latest update_cache=yes
+    - name: Install Python packages
+      pip: name={{item}} state=latest
+      with_items:
+        - redis
+        - ipython
+    - name: Install R packages
+      shell: echo "install.packages(c('{{item}}'),repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
+      with_items:
+        - ggplot2
+        - plyr
+        - dplyr
+        - lubridate
+        - zoo
+        - forecast
+        - sqldf

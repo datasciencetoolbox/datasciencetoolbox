@@ -1,0 +1,29 @@
+
+region: eu-west-1
+{
+    "ImageId": "ami-c9ea17be"
+}
+region: sa-east-1
+{
+    "ImageId": "ami-bb45e6a6"
+}
+region: ap-northeast-1
+{
+    "ImageId": "ami-230c7d22"
+}
+region: us-west-2
+{
+    "ImageId": "ami-0e630c3e"
+}
+region: us-west-1
+{
+    "ImageId": "ami-48350a0d"
+}
+region: ap-southeast-1
+{
+    "ImageId": "ami-22b7e670"
+}
+region: ap-southeast-2
+{
+    "ImageId": "ami-695ac353"
+}

@@ -1,0 +1,11 @@
+# Data Science Toolbox base setup
+---
+- hosts: 127.0.0.1
+  sudo: yes
+  connection: local
+  tasks:
+    - name: Make sure that the repos directory exists
+      action: file path=/repos state=directory
+    - name: Get DST
+      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/repos/data-science-toolbox
+    - 

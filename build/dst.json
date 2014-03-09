@@ -1,0 +1,89 @@
+{
+  "variables": {
+    "dst_version": "{{env `dst_version`}}",
+    "aws_secret_key": "{{env `aws_secret_key`}}",
+    "aws_access_key": "{{env `aws_access_key`}}"
+  },
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "virtualbox_version_file": ".vbox_version",
+      "ssh_wait_timeout": "20m",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+      "iso_url": "http://releases.ubuntu.com/13.10/ubuntu-13.10-server-amd64.iso",
+      "boot_command": [
+        "<esc><esc><enter><wait>",
+        "/install/vmlinuz noapic preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+        "hostname=data-science-toolbox ",
+        "fb=false debconf/frontend=noninteractive ",
+        "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+        "initrd=/install/initrd.gz -- <enter>"
+      ],
+      "boot_wait": "5s",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_os_type": "Ubuntu_64",
+      "http_directory": "http",
+      "iso_checksum": "2bead0f1f451734461ff88f913f4b02ba9e873b15f097a5c231bdb3763ea42e3",
+      "iso_checksum_type": "sha256"
+    },
+    {
+      "type": "amazon-ebs",
+      "ami_name": "dst-{{user `dst_version`}}",
+      "ssh_username": "ubuntu",
+      "instance_type": "m1.small",
+      "source_ami": "ami-2f252646",
+      "region": "us-east-1",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "access_key": "{{user `aws_access_key`}}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/vagrant.sh",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "only": ["virtualbox-iso"]
+    },
+    {
+      "type": "shell",
+      "script": "scripts/virtualbox.sh",
+      "override": {
+        "virtualbox-iso": {
+          "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'"
+        }
+      },
+      "only": ["virtualbox-iso"]
+    },
+    {
+      "inline": [
+        "sleep 5",
+        "sudo apt-get update",
+        "sudo apt-get install -y python-pip python-dev",
+        "sudo pip install ansible"
+      ],
+      "type": "shell"
+    },
+    {
+      "playbook_file": "../bundles/base/base.yml",
+      "type": "ansible-local"
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "scripts/vm_cleanup.sh"
+      ],
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "only": ["virtualbox-iso"]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": true,
+      "only": ["virtualbox-iso"]
+    }
+  ]
+}
