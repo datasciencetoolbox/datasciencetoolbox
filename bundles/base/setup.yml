@@ -8,4 +8,5 @@
       action: file path=/repos state=directory
     - name: Get DST
       git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/repos/data-science-toolbox
-    - 
+    - name: Install DST manager
+      shell: cd /repos/data-science-toolbox/manager && python setup.py install
