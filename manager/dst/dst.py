@@ -88,7 +88,7 @@ options:
    -v, --verbose    be verbose
 
         """
-        os.system('cd /repos/data-science-toolbox && sudo git pull && cd manager && sudo python setup.py install')
+        os.system('cd ~/repos/data-science-toolbox && sudo git pull && cd manager && sudo python setup.py install')
 
 
     def info(self, bundle_id):

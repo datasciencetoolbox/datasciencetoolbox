@@ -67,15 +67,15 @@
       "type": "shell"
     },
     {
-      "playbook_file": "../bundles/base/base.yml",
-      "type": "ansible-local"
-      "extra_arguments": ["--extra-vars=\"dst_username=vagrant\""],
+      "playbook_file": "../bundles/base/install.yml",
+      "type": "ansible-local",
+      "extra_arguments": ["--extra-vars='dst_username=vagrant'"],
       "only": ["virtualbox-iso"]
     },
     {
-      "playbook_file": "../bundles/base/base.yml",
-      "type": "ansible-local"
-      "extra_arguments": ["--extra-vars=\"dst_username=ubuntu\""],
+      "playbook_file": "../bundles/base/install.yml",
+      "type": "ansible-local",
+      "extra_arguments": ["--extra-vars='dst_username=ubuntu'"],
       "only": ["amazon-ebs"]
     },
     {
