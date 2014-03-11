@@ -25,8 +25,9 @@
     - name: Install Python packages
       pip: name={{item}} state=latest
       with_items:
-        - redis
         - ipython
+        - pyzmq
+        - tornado
     - name: Install R packages
       shell: echo "install.packages(c('{{item}}'),repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
       with_items:
@@ -38,8 +39,8 @@
         - forecast
         - sqldf
     - name: Make sure that the repos directory exists
-      action: file path=/repos state=directory
+      action: file path=/home/{{ dst_username }}/repos state=directory
     - name: Get DST
-      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/repos/data-science-toolbox
+      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/home/{{ dst_username }}/repos/data-science-toolbox
     - name: Install DST manager
-      shell: cd /repos/data-science-toolbox/manager && python setup.py install
+      shell: cd /home/{{ dst_username }}/repos/data-science-toolbox/manager && python setup.py install

@@ -23,7 +23,7 @@ import os
 import sys
 
 from os import listdir
-from os.path import join, isdir, realpath, dirname
+from os.path import join, isdir, realpath, dirname, expanduser
 
 from docopt import docopt
 from schema import Schema
@@ -31,7 +31,7 @@ from schema import Schema
 
 def run_ansible_playbook(filename):
     command = ["/usr/local/bin/ansible-playbook", filename, "-c",
-        "local", "-i", "'127.0.0.1,'", "-vvv"]
+        "local", "-i", "'127.0.0.1,'", "-vvv", "--extra-vars=\"dst_username=$(whoami)\""]
     os.system(' '.join(command))
 
 
@@ -40,6 +40,7 @@ class DataScienceToolbox(object):
     log_format = '%(asctime)-15s  [%(levelname)s] - %(name)s: %(message)s'
     logging.basicConfig(format=log_format, level=logging.DEBUG)
     log = logging.getLogger('data-science-toolbox')
+    bundle_dir = expanduser('~/repos/data-science-toolbox/bundles')
 
     def __init__(self):
         pass
@@ -53,7 +54,7 @@ options:
    -v, --verbose    be verbose
 
         """
-        run_ansible_playbook('../bundles/%s/install.yml' % bundle_id)
+        run_ansible_playbook(join(self.bundle_dir, bundle_id, 'install.yml'))
 
 
     def list(self):
@@ -64,9 +65,8 @@ options:
    -v, --verbose    be verbose
 
         """
-        #bundle_dir = join(dirname(realpath(__file__)), '..', 'bundles')
-        bundle_dir = '/repos/data-science-toolbox/bundles'
-        bundles = [f for f in listdir(bundle_dir) if isdir(join(bundle_dir,f))]
+
+        bundles = [f for f in listdir(self.bundle_dir) if isdir(join(self.bundle_dir,f))]
         print "The following Data Science Toolbox bundles are available:"
         print
         for bundle in sorted(bundles):
@@ -88,7 +88,7 @@ options:
    -v, --verbose    be verbose
 
         """
-        os.system('cd /repos/data-science-toolbox && sudo git pull')
+        os.system('cd /repos/data-science-toolbox && sudo git pull && cd manager && sudo python setup.py install')
 
 
     def info(self, bundle_id):
@@ -100,15 +100,13 @@ options:
 
         """
 
-        bundle_dir = join(dirname(realpath(__file__)), '..', 'bundles')
         try:
-            with open(join(bundle_dir, bundle_id, 'info.yml')) as f:
+            with open(join(self.bundle_dir, bundle_id, 'info.yml')) as f:
                 info = yaml.load(f.read())
+            for k, v in sorted(info.iteritems()):
+                print "%-10s: %s" % (k.capitalize(), v)
         except:
             print "Cannot get information of bundle %s" % bundle_id
-
-        for k, v in sorted(info.iteritems()):
-            print "%-10s: %s" % (k.capitalize(), v)
         print
 
 
@@ -120,7 +118,9 @@ options:
    -v, --verbose    be verbose
 
         """
-        run_ansible_playbook('../bundles/%s/setup.yml' % bundle_id)
+
+        pb = join(self.bundle_dir, bundle_id, 'setup.yml')
+        run_ansible_playbook(pb)
 
 
 def main():

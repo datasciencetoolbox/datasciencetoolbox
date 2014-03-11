@@ -3,10 +3,21 @@
 - hosts: 127.0.0.1
   sudo: yes
   connection: local
+  vars:
+    - ipython_pem_file: "/home/{{ dst_username }}/.ssh/ipython_dst.pem"
+  vars_prompt:
+    - name: "ipython_password"
+      prompt: "IPython notebook password"
+      private: yes
+      confirm: yes
   tasks:
-    - name: Make sure that the repos directory exists
-      action: file path=/repos state=directory
-    - name: Get DST
-      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/repos/data-science-toolbox
-    - name: Install DST manager
-      shell: cd /repos/data-science-toolbox/manager && python setup.py install
+    - shell: ./passwd.py {{ ipython_password }}
+    - include_vars: passwd_hash.yml
+    - name: Make sure that the notebooks directory exists
+      file: path=/home/{{ dst_username }}/notebooks state=directory owner={{ dst_username }} group={{ dst_username }}
+    - name: Create IPython profile
+      shell: "ipython profile create dst --ipython-dir=/home/{{ dst_username }}/.ipython"
+    - shell: rm passwd_hash.yml
+    - shell: openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout {{ ipython_pem_file }} -out {{ ipython_pem_file }} -batch
+    - name: Update IPython configuration
+      template: src=ipython_notebook_config.py.j2 dest=/home/{{ dst_username }}/.ipython/profile_dst/ipython_notebook_config.py owner={{ dst_username }} group={{ dst_username }} mode=0644 backup=true

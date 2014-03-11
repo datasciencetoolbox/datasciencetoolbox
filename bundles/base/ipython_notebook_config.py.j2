@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+c = get_config()
+c.FileNotebookManager.notebook_dir = u'/home/{{ dst_username }}/notebooks'
+c.IPKernelApp.pylab = 'inline'
+c.NotebookApp.ip = '*'
+c.NotebookApp.port = 8888
+c.NotebookApp.open_browser = False
+c.NotebookApp.password = u'{{ ipython_password_sha1 }}'
+c.NotebookApp.certfile = u'{{ ipython_pem_file }}'
+c.NotebookManager.notebook_dir = u'/home/{{ dst_username }}/notebooks'
