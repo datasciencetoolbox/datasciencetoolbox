@@ -30,10 +30,10 @@
     - name: Install jq
       get_url: url=http://stedolan.github.io/jq/download/linux64/jq dest=/home/{{ dst_username }}/tools/jq mode=0755 owner={{ dst_username }} group={{ dst_username }}
     - shell: GOPATH=/usr/lib/go/bin go get github.com/jehiah/json2csv
-    - name: Install xml2json
-      get_url: url=https://npmjs.org/install.sh dest=/tmp/install.sh
-    - shell: sudo clean=yes sh /tmp/install.sh
-    - npm: name=xml2json-command global=yes
+    #- name: Install xml2json
+      #get_url: url=https://npmjs.org/install.sh dest=/tmp/install.sh
+    #- shell: sudo clean=yes sh /tmp/install.sh
+    #- npm: name=xml2json-command global=yes
     - name: Install Python packages
       pip: name={{item}} state=latest
       with_items:
