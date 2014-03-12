@@ -32,11 +32,12 @@
     - shell: sudo GOPATH=/home/{{ dst_username }}/.go go get github.com/jehiah/json2csv
     - name: Get npm
       get_url: url=https://npmjs.org/install.sh dest=/tmp/install.sh
+      validate_certs: no
     - name: Install npm
       shell: sudo clean=yes sh /tmp/install.sh
     - name: Install xml2json
-      shell: sudo npm install -g xml2json-command
-    #- npm: name=xml2json-command global=yes
+      npm: name=xml2json-command global=yes
+      #shell: sudo npm install -g xml2json-command
     - name: Install Python packages
       pip: name={{item}} state=latest
       with_items:
