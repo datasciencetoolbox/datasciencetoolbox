@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DST_VERSION="0.1.2"
+DST_VERSION="0.1.3"
 
 DST_BOX="dst-${DST_VERSION}.box"
 DST_URL="https://data-science-toolbox.s3.amazonaws.com/${DST_BOX}"
@@ -13,11 +13,12 @@ echo $DST_URL > url
 
 #echo "URL: ${DST_URL}"
 
-#rm -rf output-virtualbox-iso
+rm -rf output-virtualbox-iso
+rm -rf packer_virtualbox-iso_virtualbox.box
 
 ##1. build AMI and Vagrant with Packer
-#echo "Build AMI and Vagrant with Packer"
-packer build -var-file=variables.json -var "dst_version=${DST_VERSION}" -only=amazon-ebs dst.json 
+echo "Build AMI and Vagrant with Packer"
+packer build -var-file=variables.json -var "dst_version=${DST_VERSION}" -only=amazon-ebs,virtualbox-iso dst.json 
 
 ##2. Rename and upload Vagrant box to S3
 #echo "Rename and upload Vagrant box to S3"
