@@ -36,7 +36,6 @@
     - name: Make sure that the repos directory exists
       file: path=/home/{{ dst_username }}/repos state=directory owner={{ dst_username }} group={{ dst_username }}
     - name: Get DST
-      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/home/{{ dst_username }}/repos/data-science-toolbox
-      sudo: no
+      git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/usr/lib/data-science-toolbox
     - name: Install DST manager
-      shell: cd /home/{{ dst_username }}/repos/data-science-toolbox/manager && python setup.py install
+      shell: cd /usr/lib/data-science-toolbox/manager && python setup.py install

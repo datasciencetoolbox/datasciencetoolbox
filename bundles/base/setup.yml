@@ -15,8 +15,6 @@
     - include_vars: passwd_hash.yml
     - name: Make sure that the notebooks directory exists
       file: path=/home/{{ dst_username }}/notebooks state=directory owner={{ dst_username }} group={{ dst_username }}
-    - name: Make sure that the .ipython directory exists
-      file: path=/home/{{ dst_username }}/.ipython state=directory owner={{ dst_username }} group={{ dst_username }}
     - name: Create IPython profile
       shell: "ipython profile create dst --ipython-dir=/home/{{ dst_username }}/.ipython"
     - shell: rm passwd_hash.yml
