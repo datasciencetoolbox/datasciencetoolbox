@@ -40,4 +40,3 @@
       sudo: no
     - name: Install DST manager
       shell: cd /home/{{ dst_username }}/repos/data-science-toolbox/manager && python setup.py install
-      sudo: no
