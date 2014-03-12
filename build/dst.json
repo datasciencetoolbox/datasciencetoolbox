@@ -33,7 +33,7 @@
       "type": "amazon-ebs",
       "ami_name": "dst-{{user `dst_version`}}",
       "ssh_username": "ubuntu",
-      "instance_type": "m1.small",
+      "instance_type": "m1.xlarge",
       "source_ami": "ami-2f252646",
       "region": "us-east-1",
       "secret_key": "{{user `aws_secret_key`}}",
@@ -61,7 +61,9 @@
       "inline": [
         "sleep 5",
         "sudo apt-get update",
+        "sleep 5",
         "sudo apt-get install -y python-pip python-dev",
+        "sleep 5",
         "sudo pip install ansible"
       ],
       "type": "shell"

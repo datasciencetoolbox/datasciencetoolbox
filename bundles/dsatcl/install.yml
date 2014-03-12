@@ -56,3 +56,6 @@
         - '/home/{{ dst_username }}/tools'
         - '/usr/lib/go/bin'
         - '/home/{{ dst_username }}/.go/bin'
+    - name: Source Bash configuration
+      shell: source ~/.bashrc
+      sudo: no

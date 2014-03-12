@@ -18,6 +18,8 @@ lib
 lib64
 __pycache__
 
+manager/build
+
 # Installer logs
 pip-log.txt
 
