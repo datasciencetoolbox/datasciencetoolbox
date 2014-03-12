@@ -21,7 +21,7 @@
         - g++
         - python-software-properties 
         - p7zip-full
-        - unrar
+        - unrar-free
         - unzip
     - name: Get command-line tools for data science
       git: repo=https://github.com/jeroenjanssens/command-line-tools-for-data-science.git dest=home/{{ dst_username }}/repos/command-line-tools-for-data-science/
