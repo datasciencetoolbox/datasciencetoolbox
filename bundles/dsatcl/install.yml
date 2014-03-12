@@ -55,6 +55,6 @@
         - '/home/{{ dst_username }}/tools'
         - '/usr/lib/go/bin'
         - '/home/{{ dst_username }}/.go/bin'
-    - name: LOAD PATH
+    - name: Load PATH
       shell: export $(cat /etc/environment | tr -d \")
       sudo: no

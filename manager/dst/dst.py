@@ -30,8 +30,8 @@ from schema import Schema
 
 
 def run_ansible_playbook(filename):
-    command = ["/usr/local/bin/ansible-playbook", filename, "-c",
-        "local", "-i", "'127.0.0.1,'", "-vvv", "--extra-vars=\"dst_username=$(whoami)\""]
+    command = ["/usr/local/bin/ansible-playbook", filename, "-c", "local",
+            "-i", "'127.0.0.1,'", "--extra-vars=\"dst_username=$(whoami)\""]
     os.system(' '.join(command))
 
 
