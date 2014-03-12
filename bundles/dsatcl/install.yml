@@ -36,7 +36,6 @@
       shell: sudo clean=yes sh /tmp/install.sh
     - name: Install xml2json
       npm: name=xml2json-command global=yes
-      #shell: sudo npm install -g xml2json-command
     - name: Install Python packages
       pip: name={{item}} state=latest
       with_items:
@@ -56,6 +55,6 @@
         - '/home/{{ dst_username }}/tools'
         - '/usr/lib/go/bin'
         - '/home/{{ dst_username }}/.go/bin'
-    - name: Source Bash configuration
-      shell: source ~/.bashrc
+    - name: LOAD PATH
+      shell: export $(cat /etc/environment | tr -d \")
       sudo: no
