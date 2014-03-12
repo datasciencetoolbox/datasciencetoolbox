@@ -29,7 +29,7 @@
       file: path=/home/{{ dst_username }}/tools state=directory owner={{ dst_username }} group={{ dst_username }}
     - name: Install jq
       get_url: url=http://stedolan.github.io/jq/download/linux64/jq dest=/home/{{ dst_username }}/tools/jq mode=0755 owner={{ dst_username }} group={{ dst_username }}
-    - shell: sudo go get github.com/jehiah/json2csv
+    - shell: sudo /bin/env GOPATH=/usr/lib/go go get github.com/jehiah/json2csv
     - name: Get npm
       get_url: url=https://npmjs.org/install.sh dest=/tmp/install.sh
     - name: Install npm
