@@ -23,7 +23,7 @@ import os
 import sys
 
 from os import listdir
-from os.path import join, isdir, realpath, dirname, expanduser
+from os.path import join, isdir, realpath, dirname
 
 from docopt import docopt
 from schema import Schema
@@ -40,7 +40,7 @@ class DataScienceToolbox(object):
     log_format = '%(asctime)-15s  [%(levelname)s] - %(name)s: %(message)s'
     logging.basicConfig(format=log_format, level=logging.DEBUG)
     log = logging.getLogger('data-science-toolbox')
-    bundle_dir = expanduser('~/repos/data-science-toolbox/bundles')
+    bundle_dir = '/usr/lib/data-science-toolbox/bundles'
 
     def __init__(self):
         pass
@@ -88,7 +88,7 @@ options:
    -v, --verbose    be verbose
 
         """
-        os.system('cd ~/repos/data-science-toolbox && sudo git pull && cd manager && sudo python setup.py install')
+        os.system('cd /usr/lib/data-science-toolbox && sudo git pull && cd manager && sudo python setup.py install')
 
 
     def info(self, bundle_id):
