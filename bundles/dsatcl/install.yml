@@ -24,7 +24,7 @@
         - unrar-free
         - unzip
     - name: Get command-line tools for data science
-      git: repo=https://github.com/jeroenjanssens/command-line-tools-for-data-science.git dest=home/{{ dst_username }}/repos/command-line-tools-for-data-science/
+      git: repo=https://github.com/jeroenjanssens/command-line-tools-for-data-science.git dest=/home/{{ dst_username }}/repos/command-line-tools-for-data-science/
     - name: Make sure that the tools directory exists
       file: path=/home/{{ dst_username }}/tools state=directory owner={{ dst_username }} group={{ dst_username }}
     - name: Install jq
