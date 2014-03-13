@@ -124,7 +124,7 @@ options:
 
 
 def main():
-    args = docopt(__doc__, version='Data Science Toolbox version 0.1', options_first=True)
+    args = docopt(__doc__, version='Data Science Toolbox version 0.1.5', options_first=True)
     help = {m[0]: inspect.getdoc(m[1]) for m in \
         inspect.getmembers(DataScienceToolbox, predicate=inspect.ismethod) \
         if not m[0].startswith('_')}

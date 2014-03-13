@@ -6,12 +6,15 @@ DST_BOX="dst-${DST_VERSION}.box"
 DST_URL="https://data-science-toolbox.s3.amazonaws.com/${DST_BOX}"
 AWS_REGION=$(cat ~/.aws/config | grep region | cut -d= -f2 | tr -d ' ')
 
-echo -n 'URL: '
+echo "AWS_REGION: ${AWS_REGION}" 
+echo -n 'DST_URL: '
 echo $DST_URL | tee url
 
-# Update version of dst package and try to upload package to PyPi
-< ../manager/setup.py.j2 sed "s/{{version}}/${DST_VERSION}/" > ../manager/setup.py
-( cd ../manager; python setup.py sdist upload )
+sleep 5
+
+## Update version of dst package and try to upload package to PyPi
+#< ../manager/setup.py.j2 sed "s/{{version}}/${DST_VERSION}/" > ../manager/setup.py
+#( cd ../manager; python setup.py sdist upload )
 
 
 
@@ -21,12 +24,12 @@ echo $DST_URL | tee url
 
 #echo "URL: ${DST_URL}"
 
-#rm -rf output-virtualbox-iso
-#rm -rf packer_virtualbox-iso_virtualbox.box
+rm -rf output-virtualbox-iso
+rm -rf packer_virtualbox-iso_virtualbox.box
 
-##1. build AMI and Vagrant with Packer
-#echo "Build AMI and Vagrant with Packer"
-#packer build -var-file=variables.json -var "dst_version=${DST_VERSION}" -only=amazon-ebs,virtualbox-iso dst.json 
+#1. build AMI and Vagrant with Packer
+echo "Build AMI and Vagrant with Packer"
+packer build -var-file=variables.json -var "dst_version=${DST_VERSION}" -only=virtualbox-iso dst.json 
 
 
 ##2. Rename and upload Vagrant box to S3
