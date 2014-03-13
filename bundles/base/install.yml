@@ -4,6 +4,8 @@
   sudo: yes
   connection: local
   tasks:
+    - name: Install dst command-line tool
+      pip: name=dst state=latest
     - name: Install packages
       apt: pkg={{item}} state=latest
       with_items:
@@ -35,7 +37,5 @@
         - sqldf
     - name: Make sure that the repos directory exists
       file: path=/home/{{ dst_username }}/repos state=directory owner={{ dst_username }} group={{ dst_username }}
-    - name: Get DST
+    - name: Donwload bundles
       git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/usr/lib/data-science-toolbox
-    - name: Install DST manager
-      shell: cd /usr/lib/data-science-toolbox/manager && python setup.py install
