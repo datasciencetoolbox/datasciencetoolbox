@@ -22,8 +22,11 @@
         - python-sympy
         - python-scikits-learn
         - ipython-notebook
+        - xorg
+        - lxde
+        - slim
     - shell: sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-    - apt_repository: repo='deb http://cran.rstudio.com/bin/linux/ubuntu saucy/' state=present
+    - apt_repository: repo='deb http://cran.rstudio.com/bin/linux/ubuntu trusty/' state=present
     - apt: pkg=r-base-dev state=latest update_cache=yes
     - name: Install R packages
       shell: echo "install.packages(c('{{item}}'),repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
@@ -39,3 +42,13 @@
       file: path=/home/{{ dst_username }}/repos state=directory owner={{ dst_username }} group={{ dst_username }}
     - name: Donwload bundles
       git: repo=https://github.com/DataScienceToolbox/data-science-toolbox.git dest=/usr/lib/data-science-toolbox
+    - name: Enable auto login
+      lineinfile: >
+        dest=/etc/slim.conf
+        state=present
+        insertafter=EOF
+        line="{{item}}"
+      with_items:
+        - '# Autologin to Data Science Toolbox'
+        - 'default_user             vagrant'
+        - 'auto_login               yes'
