@@ -19,6 +19,7 @@
     - name: Install Python packages
       pip: name={{item}} state=latest
       with_items:
+        - BeautifulSoup
         - Flask
         - Jinja2
         - PyGithub
@@ -41,7 +42,6 @@
         - python-dateutil
         - python-gflags
         - python-linkedin
-        - pyzmq
         - readline
         - requests
         - requests-oauthlib
