@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+$script = <<SCRIPT
+mkdir -p /home/vagrant/Desktop
+cat << EOF > /home/vagrant/Desktop/cdss.desktop
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Install Coursera Data Science Specialization
+Name[en_US]=Install Coursera Data Science Specialization
+Exec=lxterminal -l --command="dst update; dst add cdss; sleep 5;"
+Comment[en_US]=Install Coursera Data Science Specialization
+StartupNotify=true
+Categories=Utility
+EOF
+chown -R vagrant:vagrant /home/vagrant/Desktop
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "dst"
+  config.vm.box_url = "https://data-science-toolbox.s3.amazonaws.com/dst-0.2.0.box"
+  config.vm.hostname = "data-science-toolbox"
+  config.vm.network "forwarded_port", guest: 8888, host: 8888
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = true
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--vram", "256"]
+    vb.customize ["setextradata", :global, "GUI/MaxGuestResolution", "any"]
+    vb.customize ["setextradata", :id, "CustomVideoMode1", "1024x768x32"]
+  end
+  config.vm.provision "shell", inline: $script
+end
