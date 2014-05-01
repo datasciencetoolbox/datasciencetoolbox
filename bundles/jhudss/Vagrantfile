@@ -3,14 +3,14 @@
 
 $script = <<SCRIPT
 mkdir -p /home/vagrant/Desktop
-cat << EOF > /home/vagrant/Desktop/cdss.desktop
+cat << EOF > /home/vagrant/Desktop/jhudss.desktop
 [Desktop Entry]
 Encoding=UTF-8
 Type=Application
-Name=Install Coursera Data Science Specialization
-Name[en_US]=Install Coursera Data Science Specialization
-Exec=lxterminal -l --command="dst update; dst add cdss; sleep 5;"
-Comment[en_US]=Install Coursera Data Science Specialization
+Name=Install JHU Data Science Specialization
+Name[en_US]=Install JHU Data Science Specialization
+Exec=lxterminal -l --command="dst update; dst add jhudss; sleep 5;"
+Comment[en_US]=Install JHU Data Science Specialization
 StartupNotify=true
 Categories=Utility
 EOF
