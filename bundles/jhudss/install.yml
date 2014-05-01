@@ -13,8 +13,6 @@
       apt: pkg=mongodb state=latest
     - name: Create /data/db/ directory for MongoDB
       file: path=/data/db state=directory owner={{dst_username}} group={{dst_username}}
-    - name: Install GEdit
-      apt: pkg=gedit state=latest
     - name: Install Chromium
       apt: pkg=chromium-browser state=latest
     - name: Install RStudio dependencies
