@@ -25,3 +25,5 @@
       shell: openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout {{ ipython_pem_file }} -out {{ ipython_pem_file }} -batch
     - name: Update IPython configuration
       template: src=ipython_notebook_config.py.j2 dest=/home/{{ dst_username }}/.ipython/profile_dst/ipython_notebook_config.py owner={{ dst_username }} group={{ dst_username }} mode=0644 backup=true
+    - name: IPython -- Change IPython owner.
+      file: path=/home/{{ dst_username }} /.ipython owner={{ dst_username }} recurse=yes state=directory
