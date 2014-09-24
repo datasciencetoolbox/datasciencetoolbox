@@ -1,0 +1,12 @@
+# General Assembly Introduction to Data Science
+---
+- hosts: 127.0.0.1
+  sudo: yes
+  connection: local
+  tasks:
+    - name: Install Python packages
+      pip: name={{item}} state=latest
+      with_items:
+        - patsy
+        - statsmodels
+        - seaborn
