@@ -1,0 +1,9 @@
+---
+# playbook.yml
+- name: 'Provision Image'
+  hosts: default
+  become: true
+
+  tasks:
+    - name: Install htop
+      apt: pkg=htop state=latest

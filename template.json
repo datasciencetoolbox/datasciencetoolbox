@@ -1,0 +1,41 @@
+{
+  "sensitive-variables": [
+    "docker_hub_password"
+  ],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "ubuntu:20.04",
+      "commit": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": "apt-get update && apt-get install -y python3-apt sudo"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "./playbook.yml"
+    }
+  ],
+  "post-processors": [
+    [
+      {
+        "type": "docker-tag",
+        "repository": "datasciencetoolbox/dsatcl2e",
+        "force": true,
+        "only": ["docker"]
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_server": "docker.io",
+        "login_username": "datasciencetoolbox",
+        "login_password": "{{user `docker_hub_password`}}",
+        "keep_input_artifact": false,
+        "only": ["docker"]
+      }
+    ]
+  ]
+}
