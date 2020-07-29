@@ -6,13 +6,18 @@
     {
       "type": "docker",
       "image": "ubuntu:20.04",
-      "commit": true
+      "commit": true,
+      "changes": [
+        "USER dst",
+        "WORKDIR /home/dst",
+        "ENTRYPOINT [\"/bin/bash\"]"
+      ]
     }
   ],
   "provisioners": [
     {
       "type": "shell",
-      "inline": "apt-get update && apt-get install -y python3-apt sudo"
+      "inline": "apt-get update && apt-get install -y python3-pip python3-apt sudo"
     },
     {
       "type": "ansible",
