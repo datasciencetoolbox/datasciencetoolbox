@@ -9,7 +9,7 @@
       "commit": true,
       "changes": [
         "USER dst",
-        "HOSTNAME datasciencetoolbox"
+        "HOSTNAME datasciencetoolbox",
         "WORKDIR /home/dst",
         "ENTRYPOINT [\"/bin/bash\"]"
       ]
