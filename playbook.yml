@@ -48,6 +48,48 @@
       package:
         name: git
 
+    - name: Install requirements for vw
+      apt:
+        pkg:
+          - libboost-dev
+          - libboost-program-options-dev
+          - libboost-system-dev
+          - libboost-thread-dev
+          - libboost-math-dev
+          - libboost-test-dev
+          - libboost-python-dev
+          - zlib1g-dev
+          - cmake
+          - python3-pip
+
+    - name: Install vw
+      pip:
+        name: vowpalwabbit
+
+    - name: Install requirements for tapkee
+      shell:
+        chdir: /tmp
+        cmd: |
+          curl -sL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
+          mkdir eigen && \
+          tar -xzvf eigen.tar.gz -C eigen --strip-components=1 && \
+          cd eigen && \
+          mkdir build && cd build && cmake .. && \
+          make && \
+          make install
+
+    - name: Install tapkee
+      shell:
+        chdir: /tmp
+        cmd: |
+          git clone https://github.com/lisitsyn/tapkee.git && \
+          cd tapkee && \
+          mkdir build && \
+          cd build && \
+          cmake .. && \
+          make && \
+          cp -v /tmp/tapkee/bin/tapkee /usr/bin
+
     - name: Install cowsay
       apt:
         pkg: cowsay
@@ -72,24 +114,6 @@
         dest: /usr/bin
         remote_src: true
         mode: +x
-
-    - name: Install requirements for vw
-      apt:
-        pkg:
-          - libboost-dev
-          - libboost-program-options-dev
-          - libboost-system-dev
-          - libboost-thread-dev
-          - libboost-math-dev
-          - libboost-test-dev
-          - libboost-python-dev
-          - zlib1g-dev
-          - cmake
-          - python3-pip
-
-    - name: Install vw
-      pip:
-        name: vowpalwabbit
 
     - name: Create wheel group
       group:
@@ -117,3 +141,8 @@
         shell: /bin/bash
         groups: wheel
         append: true
+
+    - name: Remove tmp directory
+      file:
+        path: /tmp
+        state: absent
