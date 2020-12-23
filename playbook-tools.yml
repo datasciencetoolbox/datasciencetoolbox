@@ -169,7 +169,7 @@
           curl -sL https://github.com/google/flatbuffers/archive/v1.12.0.tar.gz > v1.12.0.tar.gz && \
           tar -xzf v1.12.0.tar.gz && \
           cd flatbuffers-1.12.0 && \
-          mkdir build && \
+          mkdir -p build && \
           cd build && \
           cmake -G "Unix Makefiles" -DFLATBUFFERS_BUILD_TESTS=Off -DFLATBUFFERS_INSTALL=On -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_FLATHASH=Off .. && \
           make install -j$(nproc)
@@ -189,10 +189,10 @@
         warn: false
         cmd: |
           curl -sL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
-          mkdir eigen && \
+          mkdir -p eigen && \
           tar -xzvf eigen.tar.gz -C eigen --strip-components=1 && \
           cd eigen && \
-          mkdir build && cd build && cmake .. && \
+          mkdir -p build && cd build && cmake .. && \
           make && \
           make install
 
@@ -202,7 +202,7 @@
         cmd: |
           git clone https://github.com/lisitsyn/tapkee.git && \
           cd tapkee && \
-          mkdir build && \
+          mkdir -p build && \
           cd build && \
           cmake .. && \
           make && \
