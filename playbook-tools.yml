@@ -21,50 +21,47 @@
       apt:
         pkg: nano
 
-    - name: Install requirements for R
-      tags: r
-      apt:
-        pkg:
-          - dirmngr
-          - gnupg
-          - apt-transport-https
-          - ca-certificates
-          - software-properties-common
-
-    - name: Add an apt key for R
-      tags: r
-      apt_key:
-        keyserver: keyserver.ubuntu.com
-        id: E298A3A825C0D65DFD57CBB651716619E084DAB9
-
-    - name: Add apt repository for R
-      tags: r
-      apt_repository:
-        repo: deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
-
     - name: Install R
       tags: r
-      apt:
-        pkg: r-base
+      block:
+      - name: Install requirements for R
+        apt:
+          pkg:
+            - dirmngr
+            - gnupg
+            - apt-transport-https
+            - ca-certificates
+            - software-properties-common
 
-    - name: Install requirements for ggmap (R package)
-      tags: r
-      apt:
-        pkg:
-          - libcurl4-openssl-dev
-          - libxml2-dev
-          - libssl-dev
+      - name: Add an apt key for R
+        apt_key:
+          keyserver: keyserver.ubuntu.com
+          id: E298A3A825C0D65DFD57CBB651716619E084DAB9
 
-    - name: Install R packages
-      tags: r
-      shell: echo "install.packages('{{item}}', repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
-      with_items:
-        - ggmap
-        - ggplot2
-        - dplyr
-        - tidyr
-        - lubridate
-        - sqldf
+      - name: Add apt repository for R
+        apt_repository:
+          repo: deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
+
+      - name: Install R
+        apt:
+          pkg: r-base
+
+      - name: Install requirements for ggmap (R package)
+        apt:
+          pkg:
+            - libcurl4-openssl-dev
+            - libxml2-dev
+            - libssl-dev
+
+      - name: Install R packages
+        shell: echo "install.packages('{{item}}', repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
+        with_items:
+          - ggmap
+          - ggplot2
+          - dplyr
+          - tidyr
+          - lubridate
+          - sqldf
 
     - name: Install various dsutils
       get_url:
