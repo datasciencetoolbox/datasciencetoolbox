@@ -1,0 +1,226 @@
+---
+- name: Install tools on Data Science Toolbox
+  hosts: default
+  become: true
+
+  tasks:
+    - name: Install man
+      apt:
+        pkg: man-db
+
+    - name: Install bc
+      apt:
+        pkg: bc
+
+    - name: Install htop
+      apt:
+        pkg: htop
+
+    - name: Install nano
+      apt:
+        pkg: nano
+
+    - name: Install requirements for R
+      apt:
+        pkg:
+          - dirmngr
+          - gnupg
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+
+    - name: Add an apt key for R
+      apt_key:
+        keyserver: keyserver.ubuntu.com
+        id: E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+    - name: Add apt repository for R
+      apt_repository:
+        repo: deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
+
+    - name: Install R
+      apt:
+        pkg: r-base
+
+    - name: Install requirements for ggmap (R package)
+      apt:
+        pkg:
+          - libcurl4-openssl-dev
+          - libxml2-dev
+          - libssl-dev
+
+    - name: Install R packages
+      shell: echo "install.packages('{{item}}', repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
+      with_items:
+        - ggmap
+        - ggplot2
+        - dplyr
+        - tidyr
+        - lubridate
+        - sqldf
+
+    - name: Install various dsutils
+      get_url:
+        url: https://raw.githubusercontent.com/jeroenjanssens/dsutils/master/{{item}}
+        dest: /usr/bin
+        mode: +x
+      with_items:
+        - Rio
+        - body
+        - cols
+        - csv2vw
+        - dseq
+        - header
+        - pbc
+        - sample
+        - scrape
+        - servewd
+        - unpack
+
+    - name: Install PyData
+      pip:
+        name:
+          - numpy
+          - pandas
+          - cssselect
+
+    - name: Install csvkit
+      pip:
+        name: csvkit
+
+    - name: Install aws
+      pip:
+        name: awscli
+
+    - name: Install skll
+      pip:
+        name: skll
+
+    - name: Install parallel
+      apt:
+        pkg: parallel
+
+    - name: Install curl
+      apt:
+        pkg: curl
+
+    - name: Install jq
+      apt:
+        pkg: jq
+
+    - name: Install make
+      apt:
+        pkg: make
+
+    - name: Install unzip
+      apt:
+        pkg: unzip
+
+    - name: Install 7zip
+      apt:
+        pkg: p7zip-full
+
+    - name: Install unrar
+      apt:
+        pkg: unrar-free
+
+    - name: Install xmlstarlet
+      apt:
+        pkg: xmlstarlet
+
+    - name: Install tree
+      apt:
+        pkg: tree
+
+    - name: Install git
+      package:
+        name: git
+
+    - name: Install bat
+      package:
+        name: bat
+
+    - name: Install requirements for vw and tapkee
+      apt:
+        pkg:
+          - libboost-dev
+          - libboost-program-options-dev
+          - libboost-system-dev
+          - libboost-thread-dev
+          - libboost-math-dev
+          - libboost-test-dev
+          - zlib1g-dev
+          - cmake
+          - g++
+
+    - name: Install requirements for vw
+      shell:
+        chdir: /tmp
+        warn: false
+        cmd: |
+          curl -sL https://github.com/google/flatbuffers/archive/v1.12.0.tar.gz > v1.12.0.tar.gz && \
+          tar -xzf v1.12.0.tar.gz && \
+          cd flatbuffers-1.12.0 && \
+          mkdir build && \
+          cd build && \
+          cmake -G "Unix Makefiles" -DFLATBUFFERS_BUILD_TESTS=Off -DFLATBUFFERS_INSTALL=On -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_FLATHASH=Off .. && \
+          make install -j$(nproc)
+
+    - name: Install vw
+      shell:
+        chdir: /tmp
+        cmd: |
+          git clone --recursive https://github.com/VowpalWabbit/vowpal_wabbit.git && \
+          cd vowpal_wabbit && \
+          make && \
+          make install
+
+    - name: Install requirements for tapkee
+      shell:
+        chdir: /tmp
+        warn: false
+        cmd: |
+          curl -sL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
+          mkdir eigen && \
+          tar -xzvf eigen.tar.gz -C eigen --strip-components=1 && \
+          cd eigen && \
+          mkdir build && cd build && cmake .. && \
+          make && \
+          make install
+
+    - name: Install tapkee
+      shell:
+        chdir: /tmp
+        cmd: |
+          git clone https://github.com/lisitsyn/tapkee.git && \
+          cd tapkee && \
+          mkdir build && \
+          cd build && \
+          cmake .. && \
+          make && \
+          cp -v /tmp/tapkee/bin/tapkee /usr/bin
+
+    - name: Install cowsay
+      apt:
+        pkg: cowsay
+
+    - name: Copy cowsay to /usr/bin/
+      copy:
+        remote_src: true
+        src: /usr/games/cowsay
+        dest: /usr/bin/cowsay
+        mode: +x
+
+    - name: Install xsv
+      unarchive:
+        src: https://github.com/BurntSushi/xsv/releases/download/0.13.0/xsv-0.13.0-x86_64-unknown-linux-musl.tar.gz
+        dest: /usr/bin
+        remote_src: true
+        mode: +x
+
+    - name: Install pup
+      unarchive:
+        src: https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip
+        dest: /usr/bin
+        remote_src: true
+        mode: +x

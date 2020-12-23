@@ -1,0 +1,60 @@
+---
+- name: Provision Data Science Toolbox
+  hosts: default
+  become: true
+
+  tasks:
+    - name: Create wheel group
+      group:
+        name: wheel
+        state: present
+
+    - name: Allow wheel group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+        validate: visudo -cf %s
+
+    - name: Prevent warning in sudo 1.8.31
+      lineinfile:
+        path: /etc/sudo.conf
+        line: "Set disable_coredump false"
+        create: yes
+
+    - name: Create dst user
+      user:
+        name: dst
+        password: "{{ 'dst' | password_hash('sha512') }}"
+        shell: /bin/bash
+        groups: wheel
+        append: true
+
+    - name: Configure bash
+      blockinfile:
+        path: /home/dst/.bashrc
+        block: |
+          export PAGER="less"
+          export PS1="\[\033[38;5;6m\][\w]$\[$(tput sgr0)\] "
+
+    - name: Ensure .bash_aliases exists
+      file:
+        path: /home/dst/.bash_aliases
+        state: touch
+        owner: dst
+        group: dst
+
+    - name: Add bash aliases
+      blockinfile:
+        path: /home/dst/.bash_aliases
+        block: |
+          alias l="ls -lph --group-directories-first"
+          alias parallel="parallel --will-cite"
+          alias bat="batcat"
+          alias python="python3"
+
+    - name: Empty tmp directory
+      shell:
+        cmd: rm -rf /tmp/*
+        warn: false

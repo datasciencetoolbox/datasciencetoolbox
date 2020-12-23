@@ -9,7 +9,7 @@
       "commit": true,
       "changes": [
         "USER dst",
-        "HOSTNAME datasciencetoolbox",
+        "ENV HOSTNAME datasciencetoolbox",
         "WORKDIR /home/dst",
         "ENTRYPOINT [\"/bin/bash\"]"
       ]
@@ -18,11 +18,16 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": "apt-get update && apt-get install -y python3-pip python3-apt sudo"
+      "inline": "apt update && yes | unminimize && apt install -y python3-pip python3-apt sudo"
     },
     {
       "type": "ansible",
-      "playbook_file": "./playbook.yml"
+      "playbook_file": "./playbook-tools.yml"
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "./playbook-user.yml",
+      "only": ["docker"]
     }
   ],
   "post-processors": [
