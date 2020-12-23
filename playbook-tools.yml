@@ -1,6 +1,7 @@
 ---
 - name: Install tools on Data Science Toolbox
-  hosts: default
+  hosts: 127.0.0.1
+  connection: local
   become: true
 
   tasks:
@@ -21,6 +22,7 @@
         pkg: nano
 
     - name: Install requirements for R
+      tags: r
       apt:
         pkg:
           - dirmngr
@@ -30,19 +32,23 @@
           - software-properties-common
 
     - name: Add an apt key for R
+      tags: r
       apt_key:
         keyserver: keyserver.ubuntu.com
         id: E298A3A825C0D65DFD57CBB651716619E084DAB9
 
     - name: Add apt repository for R
+      tags: r
       apt_repository:
         repo: deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
 
     - name: Install R
+      tags: r
       apt:
         pkg: r-base
 
     - name: Install requirements for ggmap (R package)
+      tags: r
       apt:
         pkg:
           - libcurl4-openssl-dev
@@ -50,6 +56,7 @@
           - libssl-dev
 
     - name: Install R packages
+      tags: r
       shell: echo "install.packages('{{item}}', repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
       with_items:
         - ggmap
@@ -78,11 +85,15 @@
         - unpack
 
     - name: Install PyData
+      tags: pydata
       pip:
         name:
           - numpy
           - pandas
-          - cssselect
+
+    - name: Install requirements for scrape
+      pip:
+        name: cssselect
 
     - name: Install csvkit
       pip:
