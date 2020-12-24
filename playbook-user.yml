@@ -1,5 +1,5 @@
 ---
-- name: Provision Data Science Toolbox
+- name: Setup user on Data Science Toolbox
   hosts: default
   become: true
 
