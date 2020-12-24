@@ -6,18 +6,22 @@
 
   tasks:
     - name: Install man
+      tags: man
       apt:
         pkg: man-db
 
     - name: Install bc
+      tags: bc
       apt:
         pkg: bc
 
     - name: Install htop
+      tags: htop
       apt:
         pkg: htop
 
     - name: Install nano
+      tags: nano
       apt:
         pkg: nano
 
@@ -64,6 +68,19 @@
           - sqldf
 
     - name: Install various dsutils
+      tags:
+        - body
+        - cols
+        - csv2vw
+        - dseq
+        - dsutils
+        - header
+        - pbc
+        - Rio
+        - sample
+        - scrape
+        - servewd
+        - unpack
       get_url:
         url: https://raw.githubusercontent.com/jeroenjanssens/dsutils/master/{{item}}
         dest: /usr/bin
@@ -89,137 +106,201 @@
           - pandas
 
     - name: Install requirements for scrape
+      tags:
+        - dsutils
+        - scrape
       pip:
         name: cssselect
 
     - name: Install csvkit
+      tags:
+        - csvclean
+        - csvcut
+        - csvformat
+        - csvgrep
+        - csvjoin
+        - csvjson
+        - csvkit
+        - csvlook
+        - csvpy
+        - csvsort
+        - csvsql
+        - csvstack
+        - csvstat
+        - in2csv
+        - sql2csv
       pip:
         name: csvkit
 
     - name: Install aws
+      tags: aws
       pip:
         name: awscli
 
     - name: Install skll
+      tags: skll
       pip:
         name: skll
 
     - name: Install parallel
+      tags: parallel
       apt:
         pkg: parallel
 
     - name: Install curl
+      tags: curl
       apt:
         pkg: curl
 
     - name: Install jq
+      tags: jq
       apt:
         pkg: jq
 
     - name: Install make
+      tags: make
       apt:
         pkg: make
 
     - name: Install unzip
+      tags: unzip
       apt:
         pkg: unzip
 
     - name: Install 7zip
+      tags: 7zip
       apt:
         pkg: p7zip-full
 
     - name: Install unrar
+      tags: unrar
       apt:
         pkg: unrar-free
 
     - name: Install xmlstarlet
+      tags: xmlstarlet
       apt:
         pkg: xmlstarlet
 
     - name: Install tree
+      tags: tree
       apt:
         pkg: tree
 
     - name: Install git
+      tags: git
       package:
         name: git
 
     - name: Install bat
+      tags: bat
       package:
         name: bat
 
-    - name: Install requirements for vw and tapkee
-      apt:
-        pkg:
-          - libboost-dev
-          - libboost-program-options-dev
-          - libboost-system-dev
-          - libboost-thread-dev
-          - libboost-math-dev
-          - libboost-test-dev
-          - zlib1g-dev
-          - cmake
-          - g++
+    - name: Install Vowpal Wabbit
+      tags: vw
+      block:
+      - name: Install requirements for vw
+        apt:
+          pkg:
+            - git
+            - libboost-dev
+            - libboost-program-options-dev
+            - libboost-system-dev
+            - libboost-thread-dev
+            - libboost-math-dev
+            - libboost-test-dev
+            - zlib1g-dev
+            - cmake
+            - g++
 
-    - name: Install requirements for vw
-      shell:
-        chdir: /tmp
-        warn: false
-        cmd: |
-          curl -sL https://github.com/google/flatbuffers/archive/v1.12.0.tar.gz > v1.12.0.tar.gz && \
-          tar -xzf v1.12.0.tar.gz && \
-          cd flatbuffers-1.12.0 && \
-          mkdir -p build && \
-          cd build && \
-          cmake -G "Unix Makefiles" -DFLATBUFFERS_BUILD_TESTS=Off -DFLATBUFFERS_INSTALL=On -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_FLATHASH=Off .. && \
-          make install -j$(nproc)
+      - name: Install requirements for vw
+        shell:
+          chdir: /tmp
+          warn: false
+          cmd: |
+            curl -sL https://github.com/google/flatbuffers/archive/v1.12.0.tar.gz > flatbuffers.tar.gz && \
+            tar -xzf flatbuffers.gz && \
+            cd flatbuffers-* && \
+            mkdir -p build && \
+            cd build && \
+            cmake -G "Unix Makefiles" -DFLATBUFFERS_BUILD_TESTS=Off -DFLATBUFFERS_INSTALL=On -DCMAKE_BUILD_TYPE=Release -DFLATBUFFERS_BUILD_FLATHASH=Off .. && \
+            make install -j$(nproc) && \
+            cd /tmp && \
+            rm -rf flatbuffers*
 
-    - name: Install vw
-      shell:
-        chdir: /tmp
-        cmd: |
-          git clone --recursive https://github.com/VowpalWabbit/vowpal_wabbit.git && \
-          cd vowpal_wabbit && \
-          make && \
-          make install
-
-    - name: Install requirements for tapkee
-      shell:
-        chdir: /tmp
-        warn: false
-        cmd: |
-          curl -sL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
-          mkdir -p eigen && \
-          tar -xzvf eigen.tar.gz -C eigen --strip-components=1 && \
-          cd eigen && \
-          mkdir -p build && cd build && cmake .. && \
-          make && \
-          make install
+      - name: Install vw
+        shell:
+          chdir: /tmp
+          cmd: |
+            git clone --recursive https://github.com/VowpalWabbit/vowpal_wabbit.git && \
+            cd vowpal_wabbit && \
+            make && \
+            make install && \
+            cd /tmp && \
+            rm -rf vowpal_wabbit
 
     - name: Install tapkee
-      shell:
-        chdir: /tmp
-        cmd: |
-          git clone https://github.com/lisitsyn/tapkee.git && \
-          cd tapkee && \
-          mkdir -p build && \
-          cd build && \
-          cmake .. && \
-          make && \
-          cp -v /tmp/tapkee/bin/tapkee /usr/bin
+      tags: tapkee
+      block:
+      - name: Install requirements for tapkee
+        apt:
+          pkg:
+            - libboost-dev
+            - libboost-program-options-dev
+            - libboost-system-dev
+            - libboost-thread-dev
+            - libboost-math-dev
+            - libboost-test-dev
+            - zlib1g-dev
+            - cmake
+            - g++
+
+      - name: Install requirements for tapkee
+        shell:
+          chdir: /tmp
+          warn: false
+          cmd: |
+            curl -sL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz > eigen.tar.gz && \
+            mkdir -p eigen && \
+            tar -xzvf eigen.tar.gz -C eigen --strip-components=1 && \
+            cd eigen && \
+            mkdir -p build && cd build && cmake .. && \
+            make && \
+            make install && \
+            cd /tmp && \
+            rm -rf eigen*
+
+      - name: Install tapkee
+        shell:
+          chdir: /tmp
+          cmd: |
+            git clone https://github.com/lisitsyn/tapkee.git && \
+            cd tapkee && \
+            mkdir -p build && \
+            cd build && \
+            cmake .. && \
+            make && \
+            cp -v /tmp/tapkee/bin/tapkee /usr/bin && \
+            cd /tmp &&
+            rm -rf tapkee
 
     - name: Install cowsay
-      apt:
-        pkg: cowsay
+      tags: cowsay
+      block:
+      - name: Install cowsay package
+        apt:
+          pkg: cowsay
 
-    - name: Copy cowsay to /usr/bin/
-      copy:
-        remote_src: true
-        src: /usr/games/cowsay
-        dest: /usr/bin/cowsay
-        mode: +x
+      - name: Copy cowsay to /usr/bin/
+        copy:
+          remote_src: true
+          src: /usr/games/cowsay
+          dest: /usr/bin/cowsay
+          mode: +x
 
     - name: Install xsv
+      tags: xsv
       unarchive:
         src: https://github.com/BurntSushi/xsv/releases/download/0.13.0/xsv-0.13.0-x86_64-unknown-linux-musl.tar.gz
         dest: /usr/bin
@@ -227,6 +308,7 @@
         mode: +x
 
     - name: Install pup
+      tags: pup
       unarchive:
         src: https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip
         dest: /usr/bin
