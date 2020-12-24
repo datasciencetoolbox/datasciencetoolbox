@@ -18,6 +18,11 @@
   "provisioners": [
     {
       "type": "shell",
+      "inline": ["echo \"The docker image will have tag: '{{ isotime \"20060102\" }}'\""],
+      "only": ["docker"]
+    },
+    {
+      "type": "shell",
       "inline": "apt update && yes | unminimize && apt install -y python3-pip python3-apt sudo"
     },
     {
@@ -35,6 +40,7 @@
       {
         "type": "docker-tag",
         "repository": "datasciencetoolbox/dsatcl2e",
+        "tags": ["latest", "{{ isotime \"20060102\" }}"],
         "force": true,
         "only": ["docker"]
       },
