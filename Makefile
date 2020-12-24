@@ -2,7 +2,7 @@ DOCKER_REPO = datasciencetoolbox
 DOCKER_NAME = dsatcl2e
 
 docker-build:
-	ansible-playbook playbook-tools.yml playbook-user.yml --check && ANSIBLE_NOCOWS=1 packer build -only docker -var-file variables.json template.json
+	ansible-playbook playbook-tools.yml playbook-user.yml --syntax-check && ANSIBLE_NOCOWS=1 packer build -only docker -var-file variables.json template.json
 
 docker-run:
 	docker run -it --rm -p 8000:8000 $(DOCKER_REPO)/$(DOCKER_NAME)
