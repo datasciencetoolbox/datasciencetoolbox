@@ -4,6 +4,30 @@
   become: true
 
   tasks:
+    - name: Install git
+      tags: git
+      package:
+        name: git
+
+    - name: Install dsutils
+      git:
+        repo: https://github.com/jeroenjanssens/dsutils.git
+        dest: /usr/bin/dsutils
+      tags:
+        - body
+        - cols
+        - csv2vw
+        - dseq
+        - dsutils
+        - header
+        - pbc
+        - Rio
+        - sample
+        - scrape
+        - servewd
+        - trim
+        - unpack
+
     - name: Install man
       tags: man
       apt:
@@ -65,37 +89,6 @@
           - tidyr
           - lubridate
           - sqldf
-
-    - name: Install various dsutils
-      tags:
-        - body
-        - cols
-        - csv2vw
-        - dseq
-        - dsutils
-        - header
-        - pbc
-        - Rio
-        - sample
-        - scrape
-        - servewd
-        - unpack
-      get_url:
-        url: https://raw.githubusercontent.com/jeroenjanssens/dsutils/master/{{item}}
-        dest: /usr/bin
-        mode: +x
-      with_items:
-        - Rio
-        - body
-        - cols
-        - csv2vw
-        - dseq
-        - header
-        - pbc
-        - sample
-        - scrape
-        - servewd
-        - unpack
 
     - name: Install PyData
       tags: pydata
@@ -186,10 +179,6 @@
       apt:
         pkg: tree
 
-    - name: Install git
-      tags: git
-      package:
-        name: git
 
     - name: Install bat
       tags: bat

@@ -37,6 +37,7 @@
         block: |
           export PAGER="less"
           export PS1="\[\033[38;5;6m\][\w]$\[$(tput sgr0)\] "
+          export PATH="/usr/bin/dsutils:${PATH}"
 
     - name: Ensure .bash_aliases exists
       file:
@@ -49,7 +50,7 @@
       blockinfile:
         path: /home/dst/.bash_aliases
         block: |
-          alias l="ls -lph --group-directories-first"
+          alias l="ls -lhF --group-directories-first"
           alias parallel="parallel --will-cite"
           alias bat="batcat"
           alias python="python3"
