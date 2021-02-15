@@ -10,8 +10,9 @@
       "changes": [
         "USER dst",
         "ENV HOSTNAME datasciencetoolbox",
+        "ENV SHELL /usr/bin/zsh",
         "WORKDIR /home/dst",
-        "ENTRYPOINT [\"/bin/bash\"]"
+        "ENTRYPOINT [\"/usr/bin/zsh\"]"
       ]
     }
   ],
@@ -27,7 +28,8 @@
     },
     {
       "type": "ansible",
-      "playbook_file": "./playbook-tools.yml"
+      "playbook_file": "./playbook-tools.yml",
+      "extra_arguments": ["--skip-tags=_vw,_tapkee,_r,_pydata,_skll"]
     },
     {
       "type": "ansible",

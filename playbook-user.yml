@@ -52,8 +52,58 @@
         block: |
           alias l="ls -lhF --group-directories-first"
           alias parallel="parallel --will-cite"
-          alias bat="batcat"
           alias python="python3"
+
+    - name: Symlink python3
+      file:
+        src: /usr/bin/python3
+        dest: /usr/bin/python
+        state: link
+
+    - name: Install zsh
+      apt:
+        pkg:
+         - zsh
+         - locales
+
+    - name: Ensure .zshrc exists
+      file:
+        path: /home/dst/.zshrc
+        state: touch
+        owner: dst
+        group: dst
+
+    - name: Install zsh syntax highlighting
+      shell:
+        cmd: mkdir -p /home/dst/.zsh/zsh-syntax-highlighting && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git /home/dst/.zsh/zsh-syntax-highlighting && chown -R dst:dst /home/dst/.zsh
+
+    - name: Add zshrc config
+      blockinfile:
+        path: /home/dst/.zshrc
+        block: |
+          autoload -U compinit
+          compinit
+          export PAGER="less"
+          export PS1='%B$%b '
+          export PS2='%B>%b '
+          export PATH="/usr/bin/dsutils:${PATH}"
+          export LC_CTYPE=en_US.UTF-8
+          export LANG=en_US.UTF-8
+          export LC_ALL=en_US.UTF-8
+          export HISTSAVE=1000000
+          export EDITOR=nano
+          alias l="ls --color -lhF --group-directories-first"
+          alias parallel="parallel --will-cite"
+          alias python="python3"
+          source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+    - name: Make zsh default shell
+      shell:
+        cmd: chsh -s $(which zsh) dst
+
+    - name: Set locale
+      shell:
+        cmd: locale-gen en_US.UTF-8
 
     - name: Empty tmp directory
       shell:
