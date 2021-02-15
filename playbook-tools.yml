@@ -4,6 +4,11 @@
   become: true
 
   tasks:
+    - name: Install bat
+      tags: bat
+      apt:
+        deb: https://github.com/sharkdp/bat/releases/download/v0.17.1/bat_0.17.1_amd64.deb
+
     - name: Install git
       tags: git
       package:
@@ -178,12 +183,6 @@
       tags: tree
       apt:
         pkg: tree
-
-
-    - name: Install bat
-      tags: bat
-      package:
-        name: bat
 
     - name: Install Vowpal Wabbit
       tags: vw
