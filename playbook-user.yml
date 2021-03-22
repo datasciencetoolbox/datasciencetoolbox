@@ -86,12 +86,13 @@
           export PAGER="less"
           export PS1='%B$%b '
           export PS2='%B>%b '
-          export PATH="/usr/bin/dsutils:${PATH}"
+          export PATH="/usr/local/lib/R/site-library/rush/exec:/usr/bin/dsutils:/home/dst/.local/bin:${PATH}"
           export LC_CTYPE=en_US.UTF-8
           export LANG=en_US.UTF-8
           export LC_ALL=en_US.UTF-8
           export HISTSAVE=1000000
           export EDITOR=nano
+          export TZ="Europe/Amsterdam"
           alias l="ls --color -lhF --group-directories-first"
           alias parallel="parallel --will-cite"
           alias python="python3"

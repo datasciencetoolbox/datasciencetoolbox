@@ -47,10 +47,60 @@
       apt:
         pkg: htop
 
+    - name: Install unzip
+      tags: unzip
+      apt:
+        pkg: unzip
+
+    - name: Install Node.JS and npm
+      tags: xml2json
+      apt:
+        pkg:
+          - nodejs
+          - npm
+
+    - name: Install xml2json
+      shell: npm install -g xml2json-command
+
     - name: Install nano
       tags: nano
       apt:
         pkg: nano
+
+    - name: Install sample
+      pip:
+        name:
+          sample-stream
+
+    - name: Install gron
+      tags: gron
+      unarchive:
+        src: https://github.com/tomnomnom/gron/releases/download/v0.6.1/gron-linux-amd64-0.6.1.tgz
+        dest: /usr/bin
+        remote_src: true
+        mode: +x
+
+    - name: Install json2csv
+      tags: gron
+      unarchive:
+        src: https://github.com/jehiah/json2csv/releases/download/v1.2.1/json2csv-1.2.1.linux-amd64.go1.13.5.tar.gz
+        dest: /usr/bin
+        remote_src: true
+        mode: +x
+        extra_opts:
+          - '--strip-components'
+          - '1'
+
+    - name: Install fx
+      tags: gron
+      unarchive:
+        src: https://github.com/antonmedv/fx/releases/download/20.0.2/fx-linux.zip
+        dest: /usr/bin
+        remote_src: true
+        mode: +x
+
+    - name: Rename fx
+      shell: mv /usr/bin/fx-linux /usr/bin/fx
 
     - name: Install R
       tags: r
@@ -84,15 +134,25 @@
             - libxml2-dev
             - libssl-dev
 
-      - name: Install R packages
-        shell: echo "install.packages('{{item}}', repos='http://cran.us.r-project.org')" | R --slave --no-save --no-restore-history
+      - name: Install R packages from CRAN
+        shell: echo "install.packages('{{item}}', repos='https://cloud.r-project.org')" | R --slave --no-save --no-restore-history
         with_items:
-          - ggmap
-          - ggplot2
-          - dplyr
-          - tidyr
-          - lubridate
+          - tidyverse
           - sqldf
+          - remotes
+          - cli
+          - janitor
+          - docopt
+          - prettycode
+          - fs
+
+      - name: Install R packages from GitHub
+        shell: echo "remotes::install_github('{{item}}', upgrade = 'never')" | R --slave --no-save --no-restore-history
+        with_items:
+          - coolbutuseless/devout
+          - jeroenjanssens/miniansi
+          - coolbutuseless/devoutansi
+          - jeroenjanssens/rush@ansi
 
     - name: Install PyData
       tags: pydata
@@ -157,11 +217,6 @@
       tags: make
       apt:
         pkg: make
-
-    - name: Install unzip
-      tags: unzip
-      apt:
-        pkg: unzip
 
     - name: Install 7zip
       tags: 7zip
