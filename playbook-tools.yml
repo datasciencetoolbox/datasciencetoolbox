@@ -4,15 +4,30 @@
   become: true
 
   tasks:
-    - name: Install bat
-      tags: bat
-      apt:
-        deb: https://github.com/sharkdp/bat/releases/download/v0.17.1/bat_0.17.1_amd64.deb
-
     - name: Install git
       tags: git
       package:
         name: git
+
+    - name: Install make
+      tags: make
+      apt:
+        pkg: make
+
+    - name: Install csvquote
+      tags: csvquote
+      shell:
+        chdir: /tmp
+        cmd: |
+          git clone https://github.com/dbro/csvquote.git && \
+          cd csvquote && \
+          make && \
+          make install
+
+    - name: Install bat
+      tags: bat
+      apt:
+        deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat_0.18.0_amd64.deb
 
     - name: Install dsutils
       git:
@@ -188,11 +203,6 @@
       pip:
         name: csvkit
 
-    - name: Install aws
-      tags: aws
-      pip:
-        name: awscli
-
     - name: Install skll
       tags: skll
       pip:
@@ -213,11 +223,6 @@
       apt:
         pkg: jq
 
-    - name: Install make
-      tags: make
-      apt:
-        pkg: make
-
     - name: Install 7zip
       tags: 7zip
       apt:
@@ -237,6 +242,16 @@
       tags: tree
       apt:
         pkg: tree
+
+    - name: Install aws
+      tags: aws
+      shell:
+        chdir: /tmp
+        warn: false
+        cmd: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          ./aws/install
 
     - name: Install Vowpal Wabbit
       tags: vw
