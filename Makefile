@@ -11,4 +11,4 @@ docker-stop:
 	docker stop $$(docker ps | awk '/$(DOCKER_REPO)\/$(DOCKER_NAME)/ {print $$1}') 2>/dev/null || echo "Image $(DOCKER_REPO)/$(DOCKER_NAME) not running"
 
 docker-remove:
-	docker rmi $$(docker images | awk '/$(DOCKER_REPO)\/$(DOCKER_NAME)/ {print $$3}') 2>/dev/null || echo "Image $(DOCKER_REPO)/$(DOCKER_NAME) not found"
+	docker rmi -f $$(docker images | awk '/$(DOCKER_REPO)\/$(DOCKER_NAME)/ {print $$3}') 2>/dev/null || echo "Image $(DOCKER_REPO)/$(DOCKER_NAME) not found"

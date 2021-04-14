@@ -5,7 +5,7 @@
   "builders": [
     {
       "type": "docker",
-      "image": "ubuntu:20.04",
+      "image": "ubuntu:21.04",
       "commit": true,
       "changes": [
         "USER dst",
@@ -19,17 +19,17 @@
   "provisioners": [
     {
       "type": "shell",
-      "inline": ["echo \"The docker image will have tag: '{{ isotime \"20060102\" }}'\""],
+      "inline": ["echo \"{{ isotime \"20060102\" }}\" > /tag"],
       "only": ["docker"]
     },
     {
       "type": "shell",
-      "inline": "apt update && yes | unminimize && apt install -y python3-pip python3-apt sudo"
+      "inline": "apt update && yes | unminimize && ln -fs /usr/share/zoneinfo/UTC /etc/localtime && export DEBIAN_FRONTEND=noninteractive && apt install -y tzdata && dpkg-reconfigure --frontend noninteractive tzdata && apt install -y python3-pip python3-apt sudo"
     },
     {
       "type": "ansible",
       "playbook_file": "./playbook-tools.yml",
-      "extra_arguments": ["--skip-tags=_vw,_tapkee,_r,_pydata,_skll"]
+      "extra_arguments": ["--skip-tags=pydata"]
     },
     {
       "type": "ansible",

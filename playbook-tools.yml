@@ -27,6 +27,7 @@
     - name: Install bat
       tags: bat
       apt:
+        # deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat_0.18.0_arm64.deb
         deb: https://github.com/sharkdp/bat/releases/download/v0.18.0/bat_0.18.0_amd64.deb
 
     - name: Install dsutils
@@ -68,7 +69,9 @@
         pkg: unzip
 
     - name: Install Node.JS and npm
-      tags: xml2json
+      tags:
+        - xml2json
+        - fx
       apt:
         pkg:
           - nodejs
@@ -89,14 +92,11 @@
 
     - name: Install gron
       tags: gron
-      unarchive:
-        src: https://github.com/tomnomnom/gron/releases/download/v0.6.1/gron-linux-amd64-0.6.1.tgz
-        dest: /usr/bin
-        remote_src: true
-        mode: +x
+      apt:
+        pkg: gron
 
     - name: Install json2csv
-      tags: gron
+      tags: json2csv
       unarchive:
         src: https://github.com/jehiah/json2csv/releases/download/v1.2.1/json2csv-1.2.1.linux-amd64.go1.13.5.tar.gz
         dest: /usr/bin
@@ -107,59 +107,23 @@
           - '1'
 
     - name: Install fx
-      tags: gron
-      unarchive:
-        src: https://github.com/antonmedv/fx/releases/download/20.0.2/fx-linux.zip
-        dest: /usr/bin
-        remote_src: true
-        mode: +x
-
-    - name: Rename fx
-      shell: mv /usr/bin/fx-linux /usr/bin/fx
+      tags: fx
+      shell: npm install -g fx
 
     - name: Install R
       tags: r
       block:
-      - name: Install requirements for R
-        apt:
-          pkg:
-            - dirmngr
-            - gnupg
-            - apt-transport-https
-            - ca-certificates
-            - software-properties-common
-
-      - name: Add an apt key for R
-        apt_key:
-          keyserver: keyserver.ubuntu.com
-          id: E298A3A825C0D65DFD57CBB651716619E084DAB9
-
-      - name: Add apt repository for R
-        apt_repository:
-          repo: deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/
-
       - name: Install R
         apt:
-          pkg: r-base
-
-      - name: Install requirements for ggmap (R package)
-        apt:
           pkg:
-            - libcurl4-openssl-dev
-            - libxml2-dev
-            - libssl-dev
+            - r-base
+            - r-cran-tidyverse
 
       - name: Install R packages from CRAN
         shell: echo "install.packages('{{item}}', repos='https://cloud.r-project.org')" | R --slave --no-save --no-restore-history
         with_items:
-          - tidyverse
-          - sqldf
-          - remotes
-          - cli
           - janitor
           - docopt
-          - prettycode
-          - fs
 
       - name: Install R packages from GitHub
         shell: echo "remotes::install_github('{{item}}', upgrade = 'never')" | R --slave --no-save --no-restore-history
@@ -200,13 +164,8 @@
         - csvstat
         - in2csv
         - sql2csv
-      pip:
-        name: csvkit
-
-    - name: Install skll
-      tags: skll
-      pip:
-        name: skll
+      apt:
+        pkg: csvkit
 
     - name: Install parallel
       tags: parallel
@@ -249,6 +208,7 @@
         chdir: /tmp
         warn: false
         cmd: |
+          # curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip"
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           ./aws/install
@@ -367,6 +327,7 @@
       tags: pup
       unarchive:
         src: https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_amd64.zip
+        # src: https://github.com/ericchiang/pup/releases/download/v0.4.0/pup_v0.4.0_linux_arm64.zip
         dest: /usr/bin
         remote_src: true
         mode: +x
