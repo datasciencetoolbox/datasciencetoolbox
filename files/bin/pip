@@ -1,0 +1,4 @@
+#!/bin/sh
+# `pip` is provided by uv: `pip install pandas` runs `uv pip install pandas`
+# in the default virtual environment ($VIRTUAL_ENV, /opt/venv).
+exec uv pip "$@"

@@ -1,0 +1,3 @@
+#!/bin/sh
+# xml2json-command (2016) triggers a harmless Node.js deprecation warning
+NODE_OPTIONS=--no-deprecation exec /opt/node/bin/xml2json "$@"
