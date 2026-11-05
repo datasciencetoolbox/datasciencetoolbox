@@ -6,7 +6,6 @@ export EDITOR=nano
 export PS1='%B$%b '
 export PS2='%B>%b '
 export HISTSAVE=1000000
-export TZ="Europe/Amsterdam"
 
 alias l="ls --color -lhF --group-directories-first"
 alias parallel="parallel --will-cite"

@@ -44,7 +44,8 @@ $ make test    # run the smoke tests in tests/smoke.sh
 $ make run     # start a shell in the image
 ```
 
-GitHub Actions builds the image natively for amd64 and arm64, runs the smoke tests on both, and pushes a multi-platform image to Docker Hub for every commit on `master`.
+GitHub Actions builds the image natively for amd64 and arm64, runs the smoke tests on both, and pushes a multi-platform image to Docker Hub for every commit on `main`.
+The Docker Hub page shows this README.
 
 
 ## License

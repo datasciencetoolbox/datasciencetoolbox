@@ -20,7 +20,7 @@ ARG JSON2CSV_VERSION=v1.2.1
 # fx 40.0.1 (its tags lack the v prefix that Go needs, so pin the commit)
 ARG FX_COMMIT=5d57637b00f4
 ARG PUP_COMMIT=5a57cf1
-ARG CSVQUOTE_COMMIT=master
+ARG CSVQUOTE_COMMIT=3e26cee6ec9d05bec3e70506154fa01721888d06
 ARG XML2JSON_VERSION=0.0.3
 ARG DSUTILS_COMMIT=94e795fc503e4dcdf623f2979f5ba988295792e5
 ARG RUSH_COMMIT=f7564f4dae78fb1a36210c12efa84bfde4788224
@@ -168,7 +168,8 @@ RUN echo "options(repos = c(CRAN = 'https://p3m.dev/cran/__linux__/resolute/${SN
 # Pins needed to keep the book's commands working:
 # - csvkit 1.1.0: from 1.1.1 on, csvstack can't read process substitution,
 #   e.g. `csvstack a.csv <(...)` in chapter 9
-# - sqlalchemy<2 and setuptools<81: csvkit 1.1.0 (csvsql) needs them
+# - sqlalchemy<2 and setuptools<81: csvkit 1.1.0 (csvsql) needs them; its
+#   "pkg_resources is deprecated" warning is silenced
 # - agate, since 1.6.2, warns "Error sniffing CSV dialect" whenever it falls
 #   back to the default dialect (e.g. `csvlook wine-scaled.csv` in chapter 9);
 #   older agate versions don't run on Python 3.10+, so silence that warning
@@ -188,6 +189,7 @@ RUN uv python install ${PYTHON_VERSION} && \
       csvkit==${CSVKIT_VERSION} --with 'sqlalchemy<2' --with 'setuptools<81' && \
     printf '%s\n' 'import warnings' \
       'warnings.filterwarnings("ignore", message="Error sniffing CSV dialect")' \
+      'warnings.filterwarnings("ignore", message="pkg_resources is deprecated")' \
       > /opt/uv/tools/csvkit/lib/python${PYTHON_VERSION}/site-packages/sitecustomize.py && \
     uv tool install --python ${PYTHON_VERSION} --exclude-newer ${SNAPSHOT} sample-stream==${SAMPLE_VERSION} && \
     uv venv --python ${PYTHON_VERSION} /opt/venv && \

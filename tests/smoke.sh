@@ -106,6 +106,8 @@ check 'ts' ':' 'echo hi | ts'
 check 'csvlook keeps weekdays as text' '| Sun  |' 'csvlook tips.csv'
 check 'csvsql' 'Female' "csvsql --query 'SELECT sex, COUNT(*) AS n FROM stdin GROUP BY sex' < tips.csv"
 check 'csvcut' 'bill,tip' 'csvcut -c bill,tip tips.csv | head -n 1'
+check 'csvkit prints no warnings' 'stderr: none' \
+  "err=\$({ csvsql --query 'SELECT 1 AS x' tips.csv; csvlook tips.csv } 2>&1 >/dev/null); echo stderr: \${err:-none}"
 check 'csvstack with process substitution (csvkit 1.1.0)' 'b,27.2' \
   'csvstack -n type -g a,b tips.csv <(cat tips.csv) | tail -n 1'
 check 'csvquote' '"a,b",c' "printf '\"a,b\",c\n' | csvquote | csvquote -u"

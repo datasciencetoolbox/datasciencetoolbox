@@ -1,15 +1,16 @@
 name: Docker image
 
 # Builds the image natively on amd64 and arm64 runners, runs the smoke tests
-# on both, and (only on master or when started manually) pushes one
-# multi-platform image to Docker Hub as :latest and :YYYYMMDD.
+# on both, and (only on main) pushes one multi-platform image to Docker Hub
+# as :latest and :YYYYMMDD, and syncs README.md to the Docker Hub page.
 #
 # Requires the repository secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
-# (a Docker Hub access token with read/write access).
+# (a Docker Hub personal access token with Read, Write, Delete scope; Delete
+# is needed for updating the repository description).
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -32,7 +33,7 @@ jobs:
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     env:
-      PUSH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/master' }}
+      PUSH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
     steps:
       - uses: actions/checkout@v7
 
@@ -92,7 +93,7 @@ jobs:
 
   publish:
     needs: build
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/download-artifact@v8
@@ -122,3 +123,15 @@ jobs:
 
       - name: Inspect
         run: docker buildx imagetools inspect "$IMAGE:latest"
+
+      - uses: actions/checkout@v7
+
+      - name: Update Docker Hub description
+        uses: peter-evans/dockerhub-description@v5
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.IMAGE }}
+          short-description: Every command-line tool from Data Science at the Command Line, ready to use
+          readme-filepath: ./README.md
+          enable-url-completion: true
