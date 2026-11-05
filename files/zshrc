@@ -10,5 +10,6 @@ export HISTSAVE=1000000
 alias l="ls --color -lhF --group-directories-first"
 alias parallel="parallel --will-cite"
 alias python="python3"
+alias skll="run_experiment"
 
 source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

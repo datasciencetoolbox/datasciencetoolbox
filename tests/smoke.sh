@@ -71,7 +71,7 @@ for tool in alias awk aws bash bat bc body cat cd chmod cols column cowsay cp \
     scp sed seq servewd shuf sort split sponge sql2csv ssh sudo tail tapkee \
     tar tee telnet tldr tr tree trim ts type uniq unpack unrar unzip vw wc \
     which xml2json xmlstarlet xsv zcat zsh \
-    run_experiment Rscript uv 7z htop scrape; do
+    run_experiment Rscript uv 7z htop scrape ir rx jupyter; do
   if [[ $(whence -w -- $tool) != *': none' ]]; then
     passed+=1
   else
@@ -186,9 +186,14 @@ results = output
 predictions = output
 models = output
 EOF
-check 'skll experiment from the book' 'wine_summary.tsv' 'skll() { run_experiment "$@" }; skll -l classify.cfg >/dev/null 2>&1; ls output'
+check 'skll is an alias for run_experiment' 'run_experiment' 'alias skll'
+check 'skll experiment from the book' 'wine_summary.tsv' 'skll -l classify.cfg >/dev/null 2>&1; ls output'
 
 print '== Chapter 10'
+check 'jupyter console' '6.6' 'jupyter console --version'
+check 'jupyter kernel uses the default environment' '/opt/venv' \
+  "jupyter console --simple-prompt --no-confirm-exit <<< 'import sys; print(sys.prefix)' 2>/dev/null"
+check 'ir runs R scripts' '42' "ir run -e 'cat(6 * 7)' 2>/dev/null"
 check 'python is Python 3' 'Python 3.' 'python --version'
 check 'pip freeze works (uv)' 'cssselect' 'pip freeze'
 check 'R system2' '1' "Rscript -e 'cat(length(system2(\"grep\", c(\"-i\", \"alice\"), input = c(\"Alice\", \"Bob\"), stdout = TRUE)))'"
