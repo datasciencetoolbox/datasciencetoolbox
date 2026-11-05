@@ -130,9 +130,10 @@ check 'R tidyverse' '6' "Rscript -e 'suppressMessages(library(tidyverse)); cat(n
 check 'rush run' '2.727' "rush run 'mean(df\$tip)' tips.csv"
 check 'rush run --tidyverse' 'percent' "rush run -t 'mutate(df, percent = tip / bill * 100)' tips.csv"
 check 'rush plot to PNG' 'PNG image data' 'rush plot --x bill --y tip tips.csv > plot.png; file plot.png'
-known_failure 'https://github.com/jeroenjanssens/rush/issues/8' \
-  'rush run with ggplot to PNG' 'PNG image data' \
+check 'rush run with ggplot to PNG' 'PNG image data' \
   "rush run --library ggplot2 'ggplot(df, aes(x = bill, y = tip)) + geom_point()' tips.csv > run.png; file run.png"
+check 'rush plot -O ascii has no escape codes' 'escape codes: 0.' \
+  "echo escape codes: \$(rush plot -O ascii --x bill --y tip --width 40 --height 8 tips.csv | grep -c \$'\\e')."
 check 'rush plot to terminal' 'bill' "rush plot -O ansi --x bill --y tip --width 60 --height 10 tips.csv | sed 's/\\x1b\\[[0-9;]*m//g'"
 
 print '== Chapter 8'
