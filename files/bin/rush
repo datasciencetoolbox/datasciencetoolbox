@@ -1,0 +1,5 @@
+#!/bin/sh
+# rush is an R package; this runs its command-line interface.
+# RUSH_NO_IR=1 (set in the image) makes rush use the R packages installed in
+# the image instead of resolving them at run time with `ir`.
+exec Rscript --no-init-file /usr/local/lib/R/site-library/rush/exec/rush.R "$@"
