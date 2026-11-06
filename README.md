@@ -18,6 +18,117 @@ The directory from which you run `docker run` is available as */data* inside the
 See [Chapter 2](https://jeroenjanssens.com/dsatcl/chapter-2-getting-started) for more details, including the commands for Windows.
 
 
+## Tools
+
+These are the tools in the current image (`:20261105`).
+The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-of-command-line-tools) explains what each one does.
+
+### Python
+
+| Tool | Version | |
+|---|---|---|
+| Python | 3.13.18 | `python` |
+| uv | 0.13.7 | `pip` runs `uv pip` |
+| Jupyter Console | 6.6.3 | with IPython kernel 7.4.0 |
+
+### R
+
+| Tool | Version | |
+|---|---|---|
+| R | 4.5.2 | |
+| tidyverse | 2.0.0 | includes ggplot2 4.0.3 |
+| rush | 0.2.1 | R one-liners from the shell |
+| ir | 0.4.1 | runs R scripts that declare their packages |
+| janitor, docopt | 2.2.1, 0.7.2 | |
+
+### Shells
+
+| Tool | Version | |
+|---|---|---|
+| Z shell | 5.9 | default shell, with syntax highlighting |
+| Bash | 5.3.9 | |
+
+### Core command-line tools
+
+| Tool | Version | |
+|---|---|---|
+| coreutils | uutils 0.10.0 | `cat`, `cut`, `head`, `sort`, `wc`, and the rest; `cp`, `mv`, and `rm` are GNU coreutils 9.7 |
+| grep | 3.12 | |
+| sed | 4.9 | |
+| awk | mawk 1.3.4 | |
+| findutils | 4.10.0 | `find` |
+| util-linux | 2.41.3 | `column`, `rev` |
+| moreutils | 0.69 | `sponge`, `ts` |
+| tar, gzip | 1.35, 1.14 | `zcat` |
+| bc | 1.07.1 | |
+| less, man-db | 668, 2.13.1 | |
+
+### CSV
+
+| Tool | Version | |
+|---|---|---|
+| csvkit | 1.1.0 | `csvcut`, `csvgrep`, `csvjoin`, `csvlook`, `csvsort`, `csvsql`, `csvstack`, `csvstat`, `in2csv`, `sql2csv` |
+| xsv | 0.13.0 | |
+| csvquote | git 3e26cee | |
+
+### JSON, XML, and HTML
+
+| Tool | Version | |
+|---|---|---|
+| jq | 1.8.1 | |
+| fx | 40.0.1 | |
+| gron | 0.7.1 | |
+| json2csv | 1.2.1 | |
+| xml2json | 0.0.3 | |
+| XMLStarlet | 1.6.1 | `xmlstarlet` |
+| pup | 0.4.0 | |
+
+### Obtaining data
+
+| Tool | Version | |
+|---|---|---|
+| curl | 8.18.0 | |
+| AWS CLI | 2.31.35 | `aws` |
+| OpenSSH | 10.2p1 | `ssh`, `scp` |
+| telnet | 0.17 | |
+| unzip, 7-Zip, unrar-free | 6.0, 26.00, 0.3.3 | `unzip`, `7z`, `unrar` |
+
+### Modeling
+
+| Tool | Version | |
+|---|---|---|
+| Vowpal Wabbit | 9.11.9 | `vw` |
+| SKLL | 5.1.0 | `run_experiment`, also available as `skll` |
+| Tapkee | 1.4.0 | `tapkee` |
+
+### Parallel pipelines
+
+| Tool | Version | |
+|---|---|---|
+| GNU parallel | 20240222 | |
+| sample | 0.2.5 | |
+
+### Data Science Toolbox utilities
+
+| Tool | Version | |
+|---|---|---|
+| [dsutils](https://github.com/jeroenjanssens/dsutils) | git 94e795f | `body`, `cols`, `csv2vw`, `dseq`, `header`, `pbc`, `scrape`, `servewd`, `trim`, `unpack`, and more |
+
+### Other tools
+
+| Tool | Version | |
+|---|---|---|
+| bat | 0.25.0 | |
+| tldr | tealdeer 1.8.1 | pages included, so it works offline |
+| nano | 8.7.1 | |
+| make | 4.4.1 | |
+| git | 2.53.0 | |
+| tree | 2.3.1 | |
+| htop | 3.4.1 | |
+| cowsay | 3.03 | |
+| sudo | 1.9.17 | user `dst` has passwordless sudo |
+
+
 ## Versions
 
 Every build is pushed as `:latest` and as a date tag, e.g., `:20261104`.
