@@ -24,7 +24,7 @@ ARG CSVQUOTE_COMMIT=3e26cee6ec9d05bec3e70506154fa01721888d06
 ARG XML2JSON_VERSION=0.0.3
 ARG DSUTILS_COMMIT=94e795fc503e4dcdf623f2979f5ba988295792e5
 # rush 0.2.1.9000: geom_auto() (bar charts for a discrete x) and error output
-ARG RUSH_COMMIT=4945ac0b17c35c9a2269d57d1e9e5a5534050a4a
+ARG RUSH_COMMIT=734e0d782311a6261c550ee79b9a93080a397519
 # Terminal plotting, from the forks under jeroenjanssens (the coolbutuseless
 # originals are unmaintained). miniansi 0.1.3 fixes the box plot crash;
 # devoutansi 0.1.1 adds plain-text output.
