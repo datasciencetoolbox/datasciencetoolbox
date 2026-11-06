@@ -1,3 +1,4 @@
 files/** text eol=lf
 tests/** text eol=lf
 Dockerfile text eol=lf
+scripts/** text eol=lf

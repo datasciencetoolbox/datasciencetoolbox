@@ -1,7 +1,7 @@
 IMAGE = datasciencetoolbox/dsatcl2e
 TAG = dev
 
-.PHONY: build build-amd64 test run size
+.PHONY: build build-amd64 test run size readme
 
 # Build for the architecture of this machine
 build:
@@ -19,3 +19,7 @@ run:
 
 size:
 	docker image inspect $(IMAGE):$(TAG) --format '{{.Size}}'
+
+# Update the Tools section of README.md with the versions in the image
+readme:
+	scripts/update-readme.sh $(IMAGE):$(TAG)
