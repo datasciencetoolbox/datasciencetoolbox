@@ -172,6 +172,9 @@ RUN userdel --remove ubuntu && \
 # exist only on GitHub and are compiled, so build tools are installed and
 # removed again in the same layer. pak, renv, and secretbase are the resolver
 # tooling of ir; installing them here keeps ir from compiling its own copies.
+# mgcv: geom_smooth() fits a GAM for more than 1,000 rows (Chapter 9) and
+# silently falls back to a straight line without it. duckdb and RSQLite: rush
+# sql runs every query in DuckDB, and rush reads and writes .duckdb/.sqlite.
 #
 # rush runs with RUSH_NO_IR=1 (see below), i.e., against these installed
 # packages: that works offline and starts instantly. Through ir, rush would
@@ -183,13 +186,15 @@ RUN echo "options(repos = c(CRAN = 'https://p3m.dev/cran/__linux__/resolute/${SN
       >> /etc/R/Rprofile.site && \
     apt-get update && apt-get install -y --no-install-recommends build-essential && \
     Rscript -e "install.packages(c('tidyverse', 'docopt', 'janitor', 'fs', 'remotes', \
-                                  'pak', 'renv', 'secretbase'), Ncpus = 4)" && \
+                                  'pak', 'renv', 'secretbase', \
+                                  'mgcv', 'duckdb', 'RSQLite'), Ncpus = 4)" && \
     Rscript -e "for (r in c('jeroenjanssens/devout@${DEVOUT_COMMIT}', \
                              'jeroenjanssens/miniansi@${MINIANSI_COMMIT}', \
                              'jeroenjanssens/devoutansi@${DEVOUTANSI_COMMIT}', \
                              'jeroenjanssens/rush@${RUSH_COMMIT}')) \
                   remotes::install_github(r, upgrade = 'never')" && \
-    Rscript -e "for (p in c('tidyverse', 'docopt', 'janitor', 'devoutansi', 'rush', 'pak', 'renv')) \
+    Rscript -e "for (p in c('tidyverse', 'docopt', 'janitor', 'devoutansi', 'rush', 'pak', 'renv', \
+                            'mgcv', 'duckdb', 'RSQLite')) \
                   stopifnot(requireNamespace(p, quietly = TRUE))" && \
     apt-get purge -y --auto-remove build-essential && \
     rm -rf /var/lib/apt/lists/* /tmp/*

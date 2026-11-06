@@ -140,6 +140,14 @@ check 'rush plot to terminal' 'bill' "rush plot -O ansi --x bill --y tip --width
 # Chapter 7: a bar chart for a discrete x (rush used to fail with a histogram)
 check 'rush plot bar chart for a discrete x' 'PNG image data' 'rush plot --x time tips.csv > bar.png; file bar.png'
 check 'rush plot bar chart in the terminal' 'Dinner' "rush plot -O ascii --x time --width 60 --height 10 tips.csv"
+# Chapter 9: geom_smooth() on more than 1,000 rows needs mgcv for its GAM;
+# without it, ggplot2 still says method = 'gam' but fits y ~ x (a straight line)
+check 'geom_smooth uses a GAM (mgcv)' "s(x, bs = " \
+  "Rscript -e 'library(ggplot2); df <- data.frame(x = 1:2000, y = sin(1:2000 / 100)); invisible(ggplot_build(ggplot(df, aes(x, y)) + geom_smooth()))' 2>&1"
+# rush sql (DuckDB) and database files
+check 'rush sql' 'Dinner,5' "rush sql 'SELECT time, COUNT(*) AS n FROM tips GROUP BY time ORDER BY time' tips.csv"
+check 'rush convert to duckdb and sqlite' 'tips' \
+  "rush convert -o tips.duckdb tips.csv && rush convert -o tips.sqlite tips.duckdb && rush run 'names(dfs\$tips)' tips.sqlite"
 # Chapter 7: box plots with a group of one value (miniansi used to abort)
 check 'rush plot box plot in the terminal' 'factor(size)' \
   "rush plot -O ascii --x 'factor(size)' --y bill --geom boxplot --width 60 --height 12 tips.csv"
