@@ -137,6 +137,12 @@ check 'rush run with ggplot to PNG' 'PNG image data' \
 check 'rush plot -O ascii has no escape codes' 'escape codes: 0.' \
   "echo escape codes: \$(rush plot -O ascii --x bill --y tip --width 40 --height 8 tips.csv | grep -c \$'\\e')."
 check 'rush plot to terminal' 'bill' "rush plot -O ansi --x bill --y tip --width 60 --height 10 tips.csv | sed 's/\\x1b\\[[0-9;]*m//g'"
+# Chapter 7: a bar chart for a discrete x (rush used to fail with a histogram)
+check 'rush plot bar chart for a discrete x' 'PNG image data' 'rush plot --x time tips.csv > bar.png; file bar.png'
+check 'rush plot bar chart in the terminal' 'Dinner' "rush plot -O ascii --x time --width 60 --height 10 tips.csv"
+# Chapter 7: box plots with a group of one value (miniansi used to abort)
+check 'rush plot box plot in the terminal' 'factor(size)' \
+  "rush plot -O ascii --x 'factor(size)' --y bill --geom boxplot --width 60 --height 12 tips.csv"
 
 print '== Chapter 8'
 check 'parallel' 'Processing file 3.csv' 'seq 3 | parallel "echo Processing file {}.csv"'
