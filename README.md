@@ -20,7 +20,8 @@ See [Chapter 2](https://jeroenjanssens.com/dsatcl/chapter-2-getting-started) for
 
 ## Tools
 
-These are the tools in the current image (`:20261105`).
+<!-- tools:start -->
+These are the tools in the latest image.
 The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-of-command-line-tools) explains what each one does.
 
 ### Python
@@ -81,7 +82,7 @@ The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-o
 | json2csv | 1.2.1 | |
 | xml2json | 0.0.3 | |
 | XMLStarlet | 1.6.1 | `xmlstarlet` |
-| pup | 0.4.0 | |
+| pup | 0.4.0 | git 5a57cf1 |
 
 ### Obtaining data
 
@@ -91,7 +92,7 @@ The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-o
 | AWS CLI | 2.31.35 | `aws` |
 | OpenSSH | 10.2p1 | `ssh`, `scp` |
 | telnet | 0.17 | |
-| unzip, 7-Zip, unrar-free | 6.0, 26.00, 0.3.3 | `unzip`, `7z`, `unrar` |
+| unzip, 7-Zip, unrar-free | 6.00, 26.00, 0.3.3 | `unzip`, `7z`, `unrar` |
 
 ### Modeling
 
@@ -126,7 +127,8 @@ The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-o
 | tree | 2.3.1 | |
 | htop | 3.4.1 | |
 | cowsay | 3.03 | |
-| sudo | 1.9.17 | user `dst` has passwordless sudo |
+| sudo | 1.9.17p2 | user `dst` has passwordless sudo |
+<!-- tools:end -->
 
 
 ## Versions
@@ -153,6 +155,7 @@ Python and the Python tools (csvkit, SKLL, and sample) are managed by [uv](https
 $ make build   # build for the architecture of this machine
 $ make test    # run the smoke tests in tests/smoke.sh
 $ make run     # start a shell in the image
+$ make readme  # update the Tools section of this README with the versions in the image
 ```
 
 GitHub Actions builds the image natively for amd64 and arm64, runs the smoke tests on both, and pushes a multi-platform image to Docker Hub for every commit on `main`.

@@ -129,7 +129,8 @@ FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
 # ---------------------------------------------------------------------------
 FROM ${UBUNTU}
 ARG SNAPSHOT DSUTILS_COMMIT RUSH_COMMIT DEVOUT_COMMIT MINIANSI_COMMIT DEVOUTANSI_COMMIT \
-    PYTHON_VERSION SKLL_VERSION CSVKIT_VERSION SAMPLE_VERSION JUPYTER_CONSOLE_VERSION
+    PYTHON_VERSION SKLL_VERSION CSVKIT_VERSION SAMPLE_VERSION JUPYTER_CONSOLE_VERSION \
+    TAPKEE_VERSION CSVQUOTE_COMMIT PUP_COMMIT
 ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -240,6 +241,12 @@ COPY --from=go /out/ /usr/local/bin/
 COPY --from=node /opt/node /opt/node
 COPY --from=ir /out/ir /out/rx /usr/local/bin/
 COPY files/bin/ /usr/local/bin/
+
+# Versions of the tools that can't report their own, for scripts/readme-tools.zsh
+RUN mkdir -p /usr/local/share/datasciencetoolbox && \
+    printf '%s\n' "TAPKEE_VERSION=${TAPKEE_VERSION#v}" "CSVQUOTE_COMMIT=${CSVQUOTE_COMMIT}" \
+      "PUP_COMMIT=${PUP_COMMIT}" "DSUTILS_COMMIT=${DSUTILS_COMMIT}" \
+      > /usr/local/share/datasciencetoolbox/build-info
 
 COPY --chown=dst:dst files/zshrc /home/dst/.zshrc
 

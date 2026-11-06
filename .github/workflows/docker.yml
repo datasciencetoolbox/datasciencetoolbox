@@ -2,7 +2,9 @@ name: Docker image
 
 # Builds the image natively on amd64 and arm64 runners, runs the smoke tests
 # on both, and (only on main) pushes one multi-platform image to Docker Hub
-# as :latest and :YYYYMMDD, and syncs README.md to the Docker Hub page.
+# as :latest and :YYYYMMDD, and syncs README.md to the Docker Hub page. The
+# Tools section of README.md is generated with `make readme`; pull requests
+# fail if it doesn't match the image.
 #
 # Requires the repository secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN
 # (a Docker Hub personal access token with Read, Write, Delete scope; Delete
@@ -56,6 +58,15 @@ jobs:
 
       - name: Smoke test
         run: docker run --rm -v "$PWD/tests":/tests "$IMAGE:test" /tests/smoke.sh
+
+      - name: Check that README.md lists the versions in the image
+        if: github.event_name == 'pull_request' && matrix.platform == 'linux/amd64'
+        run: |
+          scripts/update-readme.sh "$IMAGE:test"
+          if ! git diff --exit-code README.md; then
+            echo "::error file=README.md::The Tools section doesn't match the image. Run \`make readme\` and commit README.md."
+            exit 1
+          fi
 
       - name: Log in to Docker Hub
         if: env.PUSH == 'true'
@@ -125,6 +136,9 @@ jobs:
         run: docker buildx imagetools inspect "$IMAGE:latest"
 
       - uses: actions/checkout@v7
+
+      - name: List the versions in the published image in README.md
+        run: scripts/update-readme.sh "$IMAGE:latest"
 
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v5
