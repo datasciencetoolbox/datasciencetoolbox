@@ -34,6 +34,7 @@ jobs:
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
     env:
       PUSH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
     steps:
@@ -57,6 +58,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ env.ARCH }}
 
       - name: Smoke test
+        timeout-minutes: 15
         run: docker run --rm -v "$PWD/tests":/tests "$IMAGE:test" /tests/smoke.sh
 
       - name: Check that README.md lists the versions in the image
@@ -106,6 +108,7 @@ jobs:
     needs: build
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
       - uses: actions/download-artifact@v8
         with:
