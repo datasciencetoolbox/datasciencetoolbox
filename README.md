@@ -38,7 +38,7 @@ The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-o
 |---|---|---|
 | R | 4.5.2 | |
 | tidyverse | 2.0.0 | includes ggplot2 4.0.3 |
-| rush | 0.2.1 | R one-liners from the shell |
+| rush | 0.2.1.9000 | R one-liners from the shell |
 | ir | 0.4.1 | runs R scripts that declare their packages |
 | janitor, docopt | 2.2.1, 0.7.2 | |
 

@@ -23,11 +23,15 @@ ARG PUP_COMMIT=5a57cf1
 ARG CSVQUOTE_COMMIT=3e26cee6ec9d05bec3e70506154fa01721888d06
 ARG XML2JSON_VERSION=0.0.3
 ARG DSUTILS_COMMIT=94e795fc503e4dcdf623f2979f5ba988295792e5
-# rush 0.2.1
-ARG RUSH_COMMIT=c91f8b4274b1a4ef3c2f98a36e08193aac037dd8
+# rush 0.2.1.9000: geom_auto() (bar charts for a discrete x), error output, and
+# database-to-database conversion
+ARG RUSH_COMMIT=5e75a1d59384efea243a316dacf3092b36169f26
+# Terminal plotting, from the forks under jeroenjanssens (the coolbutuseless
+# originals are unmaintained). miniansi 0.1.3 fixes the box plot crash;
+# devoutansi 0.1.1 adds plain-text output.
 ARG DEVOUT_COMMIT=fae1037ac2acbc6f134e200d19d5246f31048a1f
-ARG MINIANSI_COMMIT=38351133b5d588c4c06e34a44c6d06508089e223
-ARG DEVOUTANSI_COMMIT=f9c78b2e186808b3564b9853336495944b611354
+ARG MINIANSI_COMMIT=d0cb29600c4d014097dbf1b9c282e1d1ee3e8931
+ARG DEVOUTANSI_COMMIT=f27201d6c8b1735b707c6a627cddeefb31b8a990
 ARG PYTHON_VERSION=3.13
 ARG SKLL_VERSION=5.1.0
 ARG CSVKIT_VERSION=1.1.0
@@ -169,6 +173,9 @@ RUN userdel --remove ubuntu && \
 # exist only on GitHub and are compiled, so build tools are installed and
 # removed again in the same layer. pak, renv, and secretbase are the resolver
 # tooling of ir; installing them here keeps ir from compiling its own copies.
+# mgcv: geom_smooth() fits a GAM for more than 1,000 rows (Chapter 9) and
+# silently falls back to a straight line without it. duckdb and RSQLite: rush
+# sql runs every query in DuckDB, and rush reads and writes .duckdb/.sqlite.
 #
 # rush runs with RUSH_NO_IR=1 (see below), i.e., against these installed
 # packages: that works offline and starts instantly. Through ir, rush would
@@ -180,13 +187,15 @@ RUN echo "options(repos = c(CRAN = 'https://p3m.dev/cran/__linux__/resolute/${SN
       >> /etc/R/Rprofile.site && \
     apt-get update && apt-get install -y --no-install-recommends build-essential && \
     Rscript -e "install.packages(c('tidyverse', 'docopt', 'janitor', 'fs', 'remotes', \
-                                  'pak', 'renv', 'secretbase'), Ncpus = 4)" && \
-    Rscript -e "for (r in c('coolbutuseless/devout@${DEVOUT_COMMIT}', \
+                                  'pak', 'renv', 'secretbase', \
+                                  'mgcv', 'duckdb', 'RSQLite'), Ncpus = 4)" && \
+    Rscript -e "for (r in c('jeroenjanssens/devout@${DEVOUT_COMMIT}', \
                              'jeroenjanssens/miniansi@${MINIANSI_COMMIT}', \
-                             'coolbutuseless/devoutansi@${DEVOUTANSI_COMMIT}', \
+                             'jeroenjanssens/devoutansi@${DEVOUTANSI_COMMIT}', \
                              'jeroenjanssens/rush@${RUSH_COMMIT}')) \
                   remotes::install_github(r, upgrade = 'never')" && \
-    Rscript -e "for (p in c('tidyverse', 'docopt', 'janitor', 'devoutansi', 'rush', 'pak', 'renv')) \
+    Rscript -e "for (p in c('tidyverse', 'docopt', 'janitor', 'devoutansi', 'rush', 'pak', 'renv', \
+                            'mgcv', 'duckdb', 'RSQLite')) \
                   stopifnot(requireNamespace(p, quietly = TRUE))" && \
     apt-get purge -y --auto-remove build-essential && \
     rm -rf /var/lib/apt/lists/* /tmp/*
