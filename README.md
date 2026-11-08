@@ -113,7 +113,7 @@ The book's [list of command-line tools](https://jeroenjanssens.com/dsatcl/list-o
 
 | Tool | Version | |
 |---|---|---|
-| [dsutils](https://github.com/jeroenjanssens/dsutils) | git 94e795f | `body`, `cols`, `csv2vw`, `dseq`, `header`, `pbc`, `scrape`, `servewd`, `trim`, `unpack`, and more |
+| [dsutils](https://github.com/jeroenjanssens/dsutils) | git 4f49774 | `body`, `cols`, `csv2vw`, `dseq`, `header`, `pbc`, `scrape`, `servewd`, `trim`, `unpack`, and more |
 
 ### Other tools
 
