@@ -100,6 +100,11 @@ check 'unpack' 'unpack' 'unpack 2>&1 | head -n 3; echo unpack'
 print '== Chapter 5'
 check 'header and body' $'values\n10' 'seq 10 | header -a values | body sort -nr | head -n 2'
 check 'trim' '… with' 'seq 100 | trim 5'
+# trim measures terminal columns, not bytes (mawk counts bytes and used to cut
+# lines with box-drawing characters too early, in the middle of a character)
+check 'trim keeps multibyte characters whole' '─────────…' "printf '─%.0s' {1..20} | trim 1 10"
+check 'trim counts wide characters as two columns' '日本語テ…' 'echo 日本語テキスト | trim 1 10'
+check 'trim test suite' 'trim: 44 passed, 0 failed' '/usr/bin/dsutils/tests/test-trim'
 check 'sample' 'Line' 'seq -f "Line %g" 1000 | sample -r 1% | head -n 1'
 check 'sponge' '1	a' "printf 'a\nb\n' > dates.txt; < dates.txt nl -w1 | sponge dates.txt; cat dates.txt"
 check 'ts' ':' 'echo hi | ts'
