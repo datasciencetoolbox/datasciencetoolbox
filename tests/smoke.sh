@@ -150,6 +150,11 @@ check 'rush plot bar chart in the terminal' 'Dinner' "rush plot -O ascii --x tim
 check 'geom_smooth uses a GAM (mgcv)' "s(x, bs = " \
   "Rscript -e 'library(ggplot2); df <- data.frame(x = 1:2000, y = sin(1:2000 / 100)); invisible(ggplot_build(ggplot(df, aes(x, y)) + geom_smooth()))' 2>&1"
 # rush sql (DuckDB) and database files
+# rush plot --geom-args passes arguments to the geom (e.g. ch09's density plot)
+check 'rush plot --geom-args' 'geom_density(adjust = 3, alpha = 0.5)' \
+  "rush plot -n -R --x tip --fill time --geom density --geom-args 'adjust = 3, alpha = 0.5' tips.csv | tr -s ' \\n' ' '"
+check 'rush plot --geom-args draws a PNG' 'PNG image data' \
+  "rush plot --x tip --fill time --geom density --geom-args 'adjust = 3, alpha = 0.5' tips.csv > density.png; file density.png"
 check 'rush sql' 'Dinner,5' "rush sql 'SELECT time, COUNT(*) AS n FROM tips GROUP BY time ORDER BY time' tips.csv"
 check 'rush convert to duckdb and sqlite' 'tips' \
   "rush convert -o tips.duckdb tips.csv && rush convert -o tips.sqlite tips.duckdb && rush run 'names(dfs\$tips)' tips.sqlite"
