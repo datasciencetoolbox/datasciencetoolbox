@@ -23,9 +23,9 @@ ARG PUP_COMMIT=5a57cf1
 ARG CSVQUOTE_COMMIT=3e26cee6ec9d05bec3e70506154fa01721888d06
 ARG XML2JSON_VERSION=0.0.3
 ARG DSUTILS_COMMIT=4f4977492f0c345f4f308f279fe9cc99456a47a4
-# rush 0.2.1.9000: geom_auto() (bar charts for a discrete x), error output, and
-# database-to-database conversion
-ARG RUSH_COMMIT=5b7976dd7efe55208334ec1e475f61be3c15460d
+# rush 0.3.0.9000: rush 0.3.0 (--geom-args, multi-sheet input and output, -O for
+# plots on stdout) plus named vectors and matrices, and a fixed --version
+ARG RUSH_COMMIT=ac614c8c60ac6ac6c7d5fde4ada8e411130fb234
 # Terminal plotting, from the forks under jeroenjanssens (the coolbutuseless
 # originals are unmaintained). miniansi 0.1.3 fixes the box plot crash;
 # devoutansi 0.1.1 adds plain-text output.
@@ -61,7 +61,11 @@ RUN git clone --depth 1 --branch ${TAPKEE_VERSION} https://github.com/lisitsyn/t
     install -s tapkee/bin/tapkee /usr/local/bin/tapkee
 
 # Only the CLI is built; the Python wheel on PyPI can't read from stdin
-RUN git clone --depth 1 --branch ${VW_VERSION} --recursive https://github.com/VowpalWabbit/vowpal_wabbit.git && \
+# Fetch just the submodules the build uses: armadillo-code (for the optional, off by
+# default cb_graph_feedback reduction) is no longer on GitLab
+RUN git clone --depth 1 --branch ${VW_VERSION} https://github.com/VowpalWabbit/vowpal_wabbit.git && \
+    git -C vowpal_wabbit submodule update --init --depth 1 \
+      ext_libs/rapidjson ext_libs/spdlog ext_libs/fmt ext_libs/eigen ext_libs/sse2neon/sse2neon && \
     cmake -S vowpal_wabbit -B vowpal_wabbit/build -DCMAKE_BUILD_TYPE=Release \
       -DBUILD_TESTING=OFF -DVW_BUILD_VW_C_WRAPPER=OFF -DBUILD_JAVA=OFF -DBUILD_PYTHON=OFF \
       -DVW_INSTALL=OFF -DRAPIDJSON_SYS_DEP=OFF -DFMT_SYS_DEP=OFF -DSPDLOG_SYS_DEP=OFF \
